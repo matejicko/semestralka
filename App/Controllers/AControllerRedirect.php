@@ -2,9 +2,9 @@
 
 namespace App\Controllers;
 
-use App\Core\Responses\Response;
+use App\Core\AControllerBase;
 
-class AControllerRedirect extends \App\Core\AControllerBase
+abstract class AControllerRedirect extends \App\Core\AControllerBase
 {
 
     protected function redirect($controller, $action = "", $params = [])
@@ -19,11 +19,4 @@ class AControllerRedirect extends \App\Core\AControllerBase
         header($location);
     }
     
-    /**
-     * @inheritDoc
-     */
-    public function index()
-    {
-        
-    }
 }

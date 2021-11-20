@@ -2,9 +2,10 @@
 
 namespace App\Controllers;
 
+use App\Authentification;
 use App\Core\Responses\Response;
 
-class auth extends \App\Core\AControllerBase
+class authController extends \App\Controllers\AControllerRedirect
 {
 
     /**
@@ -14,4 +15,54 @@ class auth extends \App\Core\AControllerBase
     {
         return $this->html();
     }
+
+    public function loginForm()
+    {
+        return $this->html();
+    }
+
+    public function login()
+    {
+        $mail = $this->request()->getValue('email');
+        $password = $this->request()->getValue('password');
+
+        if(Authentification::verify($mail, $password)){
+            $this->redirect('home');
+        }else{
+            $this->redirect('auth', 'loginForm');
+        }
+
+    }
+
+    public function logout()
+    {
+        Authentification::logOut();
+        $this->redirect('home');
+    }
+
+    public function registration()
+    {
+        $username = $this->request()->getValue('username');
+        $name = $this->request()->getValue('name');
+        $surname = $this->request()->getValue('surname');
+        $mail = $this->request()->getValue('mail');
+        $photo = $this->request()->getValue('photo');
+        $password = $this->request()->getValue('password');
+
+        if (Authentification::register($username, $name, $surname, $mail, $photo, $password)){
+            $this->redirect('home');
+        }else{
+            $this->redirect('auth', 'registrationForm');
+        }
+
+
+    }
+
+    public function registrationForm()
+    {
+        return $this->html();
+    }
+
+
+
 }

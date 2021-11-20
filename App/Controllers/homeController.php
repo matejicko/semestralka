@@ -5,11 +5,11 @@ namespace App\Controllers;
 use App\Core\AControllerBase;
 
 /**
- * Class HomeController
+ * Class homeController
  * Example of simple controller
  * @package App\Controllers
  */
-class HomeController extends AControllerBase
+class homeController extends \App\Controllers\AControllerRedirect
 {
 
     public function index()
@@ -21,6 +21,13 @@ class HomeController extends AControllerBase
     }
 
     public function contact()
+    {
+        return $this->html(
+            []
+        );
+    }
+
+    public function about()
     {
         return $this->html(
             []
