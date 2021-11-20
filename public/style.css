@@ -1,0 +1,116 @@
+*{
+    font-family: 'Montserrat', sans-serif;
+}
+
+a{
+    color: white;
+}
+
+a:link{
+    color: white;
+}
+
+a:visited{
+    color: white;
+}
+
+ul{
+    list-style-type: none;
+}
+
+p{
+    font-family: Corbel;
+}
+
+
+h1, h2, h3, h4, h5, h6{
+    font-family: "Montserrat";
+    font-weight: 600;
+}
+
+.caption-box{
+    font-family: "Montserrat";
+    font-weight: 600;
+    color: white;
+    text-shadow: 2px 2px 6px #000000;
+}
+
+.block{
+    border: 2px solid rgb(7, 21, 36);
+    border-radius: 20px;
+    margin-top: 2%;
+    padding: 2%;
+}
+
+.navbar{
+    background-color: rgb(7, 21, 36) !important;
+}
+
+.btn{
+    background-color: rgb(7, 21, 36);
+    color: white;
+    font-family: "Montserrat SemiBold";
+}
+
+.btn:hover{
+    color: darkgrey;
+}
+
+.input-group{
+    margin-top: 5%;
+}
+
+
+.footer{
+    color: white;
+    background-color: rgb(7, 21, 36);
+    bottom: 0;
+    position: absolute;
+    width: 100%;
+}
+
+body{
+    min-height: 100vh;
+    position: relative;
+    padding-bottom: 300px;
+}
+
+.logo{
+    width: 80px;
+    height: 80px;
+}
+
+#podklad{
+    background-color: aliceblue;
+}
+
+#text-body{
+    padding-top: 1.2%;
+    padding-bottom: 1.2%;
+}
+
+.vlajka{
+    max-height: 32pt;
+    border-radius: 5pt;
+    float: right;
+}
+
+.contact-menu{
+    padding: 2% 0;
+    margin: auto;
+}
+
+.tmava-ikona{
+    color: rgb(7, 21, 36);
+}
+
+.bleda-ikona{
+    color: white;
+    font-size: 15pt;
+}
+
+.logo-box{
+    width: 16.66%;
+    vertical-align: middle;
+}
+
