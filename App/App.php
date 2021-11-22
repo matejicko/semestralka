@@ -39,6 +39,8 @@ class App
      */
     public function run()
     {
+        session_start();
+
         ob_start();
 
         // get a controller and action from URL

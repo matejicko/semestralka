@@ -26,7 +26,7 @@ class authController extends \App\Controllers\AControllerRedirect
         $mail = $this->request()->getValue('email');
         $password = $this->request()->getValue('password');
 
-        if(Authentification::verify($mail, $password)){
+        if(Authentification::verifyAndLogIn($mail, $password)){
             $this->redirect('home');
         }else{
             $this->redirect('auth', 'loginForm');
@@ -48,19 +48,20 @@ class authController extends \App\Controllers\AControllerRedirect
         $mail = $this->request()->getValue('mail');
         $photo = $this->request()->getValue('photo');
         $password = $this->request()->getValue('password');
+        $checkPassword = $this->request()->getValue('password');
 
         if (Authentification::register($username, $name, $surname, $mail, $photo, $password)){
             $this->redirect('home');
         }else{
-            $this->redirect('auth', 'registrationForm');
+            $this->redirect('auth', 'registrationForm',
+                ['error' => 'Nepodarilo sa zaregistrovať!']);
         }
-
 
     }
 
     public function registrationForm()
     {
-        return $this->html();
+        return $this->html(['error' => $this->request()->getValue('error')]);
     }
 
 

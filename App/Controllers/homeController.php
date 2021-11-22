@@ -14,23 +14,16 @@ class homeController extends \App\Controllers\AControllerRedirect
 
     public function index()
     {
-        return $this->html(
-            [
-                'meno' => 'študent'
-            ]);
+        return $this->html();
     }
 
     public function contact()
     {
-        return $this->html(
-            []
-        );
+        return $this->html();
     }
 
     public function about()
     {
-        return $this->html(
-            []
-        );
+        return $this->html();
     }
 }

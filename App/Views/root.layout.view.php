@@ -20,6 +20,7 @@
 
 </head>
 <body>
+
 <!--Vrchné menu, pri resize pribudne moznost rozkliknut moznosti-->
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
     <div class="container-fluid">
@@ -35,31 +36,46 @@
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="index.html">Hlavná stránka</a>
+                    <a class="nav-link" href="?c=home&a=index">Hlavná stránka</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="about.html">O projekte</a>
+                    <a class="nav-link" href="?c=home&a=about">O projekte</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="recipe1.html">Recept</a>
+                    <a class="nav-link" href="?c=home&a=recipe">Recept</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="contact.html">Kontakt</a>
+                    <a class="nav-link" href="?c=home&a=contact">Kontakt</a>
                 </li>
 
                 <?php if (\App\Authentification::isLogged()){?>
 
+<!--                    <li class="nav-item dropdown">-->
+<!--                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Účet</a>-->
+<!--                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">-->
+<!--                            <li><a class="dropdown-item" href="#">Nastavenia účtu</a></li>-->
+<!--                            <li><a class="dropdown-item" href="#">Moje recepty</a></li>-->
+<!--                            <li><a class="dropdown-item" href="#">Odhlásiť sa</a></li>-->
+<!--                        </ul>-->
+<!--                    </li>-->
+
                     <li class="nav-item">
-                        <a class="nav-link" href="?c=auth&a=logout">Odhlásiť</a>
+                        <a class="nav-link text-info" href="?c=account">Účet</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-danger" href="?c=auth&a=logout">Odhlásiť</a>
                     </li>
 
                 <?php }else{ ?>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="?c=auth&a=loginForm">Prihlásiť</a>
+                        <a class="nav-link text-success" href="?c=auth&a=loginForm">Prihlásiť</a>
                     </li>
 
                 <?php } ?>
+
+
 
             </ul>
         </div>

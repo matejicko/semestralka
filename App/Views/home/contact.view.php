@@ -6,7 +6,7 @@
 
     <div class="col-sm-4">
         <div class="card" style="max-width: 100%">
-            <img class="card-img-top img-fluid" src="profile.jpg" alt="Profilová fotka" style="float: left">
+            <img class="card-img-top img-fluid" src="public/images/profile.jpg" alt="Profilová fotka" style="float: left">
         </div>
     </div>
     <div class="col-sm-4">

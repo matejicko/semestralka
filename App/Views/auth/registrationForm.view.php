@@ -5,6 +5,13 @@
     <div class="col-sm-2"></div>
 
     <div class="col-sm-8 block">
+
+        <?php if($data['error'] != ''){?>
+            <div class="alert alert-danger" role="alert">
+                <?=$data['error']?>
+            </div>
+        <?php }?>
+
         <h4>Registrácia</h4>
         <form name="loginForm" method="post" action="?c=auth&a=registration">
             <div class="mb-3">

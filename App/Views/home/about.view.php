@@ -13,7 +13,7 @@
     <!-- Samotné fotky -->
     <div class="carousel-inner">
         <div class="carousel-item active">
-            <img src="wiener-schnitzel.jpg" alt="Wiener Schnitzel" class="d-block w-100">
+            <img src="public/images/wiener-schnitzel.jpg" alt="Wiener Schnitzel" class="d-block w-100">
             <div class="carousel-caption">
                 <div class="caption-box">
                     <h3>Rakúsko</h3>
@@ -22,7 +22,7 @@
             </div>
         </div>
         <div class="carousel-item">
-            <img src="tulumba.jpg" alt="Tulumba" class="d-block w-100">
+            <img src="public/images/tulumba.jpg" alt="Tulumba" class="d-block w-100">
             <div class="carousel-caption">
                 <div class="caption-box">
                     <h3>(Severné) Macedónsko</h3>
@@ -31,7 +31,7 @@
             </div>
         </div>
         <div class="carousel-item">
-            <img src="ful-mudames.jpg" alt="Ful Medames" class="d-block w-100">
+            <img src="public/images/ful-mudames.jpg" alt="Ful Medames" class="d-block w-100">
             <div class="carousel-caption">
                 <div class="caption-box">
                     <h3>(Južný) Sudán</h3>
