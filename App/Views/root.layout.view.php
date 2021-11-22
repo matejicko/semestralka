@@ -60,12 +60,19 @@
 <!--                    </li>-->
 
                     <li class="nav-item">
-                        <a class="nav-link text-info" href="?c=account">Účet</a>
+                        <a class="nav-link" href="?c=account">Účet</a>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link text-danger" href="?c=auth&a=logout">Odhlásiť</a>
                     </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link " href="?c=account">
+                            <i class="text-success">● </i>
+                            <i><?=\App\AccountHandler::getLoggedUser()->getUsername()?></i></a>
+                    </li>
+
 
                 <?php }else{ ?>
 

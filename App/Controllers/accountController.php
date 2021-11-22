@@ -2,8 +2,10 @@
 
 namespace App\Controllers;
 
+use App\AccountHandler;
 use App\Core\Responses\Response;
 use App\Models\user;
+use App\RecipesHandler;
 
 class accountController extends AControllerRedirect
 {
@@ -13,22 +15,32 @@ class accountController extends AControllerRedirect
      */
     public function index()
     {
-        $users = user::getAll('mail="'.$_SESSION['name'].'"');
-        if ($users != null){
-            $user = $users[0];
-
+        $user = AccountHandler::getLoggedUser();
+        if ($user != null){
             return $this->html([
-                'user' => $user
+                'username' => $user->getUsername(),
+                'name' => $user->getName(),
+                'surname' => $user->getSurname(),
+                'mail' => $user->getMail(),
+                'photo' => $user->getPhoto()
             ]);
+        }else{
+            $this->redirect('fail', 'userData');
         }
+    }
+
+    public function deleteAccount(){
+        AccountHandler::deleteAccount();
     }
 
     public function settingsForm()
     {
-
+        return $this->html();
     }
 
     public function showMyRecipes(){
-
+        $user = AccountHandler::getLoggedUser();
+        $recepty = RecipesHandler::getRecipesForUser($user->getId());
+        return $this->html(['recipes' => $recepty]);
     }
 }

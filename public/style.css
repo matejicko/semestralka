@@ -38,8 +38,8 @@ h1, h2, h3, h4, h5, h6{
 .block{
     border: 2px solid rgb(7, 21, 36);
     border-radius: 20px;
-    margin-top: 2%;
     padding: 2%;
+    margin-top: 2%;
 }
 
 .navbar{
@@ -50,6 +50,7 @@ h1, h2, h3, h4, h5, h6{
     background-color: rgb(7, 21, 36);
     color: white;
     font-family: "Montserrat SemiBold";
+    border: none;
 }
 
 .btn:hover{
