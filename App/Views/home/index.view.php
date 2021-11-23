@@ -8,10 +8,11 @@
         <div class="col-sm-8">
             <div class="input-group mb-3">
                 <h1>Vyhľadávanie receptov</h1>
-                <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Vyhľadať na základe názvu receptu...">
+                <form class="input-group mb-3" action="?c=recipes&a=findRecipe">
+                    <input type="text" class="form-control" name="title"
+                           placeholder="Vyhľadať na základe názvu receptu...">
                     <button class="btn" type="submit">Vyhľadaj</button>
-                </div>
+                </form>
 
             </div>
         </div>

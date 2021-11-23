@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Core\Responses\Response;
+use App\SearchManager;
 
 class recipesController extends \App\Controllers\AControllerRedirect
 {
@@ -39,5 +40,10 @@ class recipesController extends \App\Controllers\AControllerRedirect
     public function showRecipe()
     {
         return $this->html();
+    }
+
+    public function findRecipe(){
+        return $this->html(
+            [ 'recipes' => SearchManager::findRecipesByTitle($this->request()->getValue('title'))]);
     }
 }

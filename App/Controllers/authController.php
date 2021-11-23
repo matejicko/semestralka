@@ -18,7 +18,7 @@ class authController extends \App\Controllers\AControllerRedirect
 
     public function loginForm()
     {
-        return $this->html();
+        return $this->html(['error' => $this->request()->getValue('error')]);
     }
 
     public function login()
@@ -29,7 +29,8 @@ class authController extends \App\Controllers\AControllerRedirect
         if(Authentification::verifyAndLogIn($mail, $password)){
             $this->redirect('home');
         }else{
-            $this->redirect('auth', 'loginForm');
+            $this->redirect('auth', 'loginForm',
+                ['error' => 'Užívateľské meno alebo heslo nie je správne!']);
         }
 
     }

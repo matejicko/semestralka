@@ -29,4 +29,59 @@ class AccountHandler
         }
     }
 
+    public static function editAccount(Core\Request $request)
+    {
+        $loggedUser = self::getLoggedUser();
+
+        $newUsername = $request->getValue('username');
+        $newName = $request->getValue('name');
+        $newSurname = $request->getValue('surname');
+        $newMail = $request->getValue('mail');
+
+        $checkUsers = user::getAll('username = "'.$newUsername.'" OR mail="'.$newMail.'"');
+
+        //ak by sa uz nachadzal v DB user s rovnakym usernameom alebo mailom (jedinecnymi identifikatormi)
+        if ($checkUsers != null){
+            $checkUser = $checkUsers[0];
+            if ($loggedUser->getUsername() != $checkUser->getUsername() ||
+                    $loggedUser->getMail() != $checkUser->getMail()){
+                return false;
+            }
+        }
+
+        //ak novy username nie je prazdny retazec, tak ho nastavim (unikatnost je riesena vyssie)
+        if ($newUsername != ''){
+            $loggedUser->setUsername($newUsername);
+        }else{
+            return false;
+        }
+
+        //ak nove meno nie je prazdny retazec, tak ho nastavim
+        if ($newName != ''){
+            $loggedUser->setName($newName);
+        }else{
+            return false;
+        }
+
+        //ak nove priezvisko nie je prazdny retazec, tak ho nastavim
+        if ($newSurname != ''){
+            $loggedUser->setSurname($newSurname);
+        }else{
+            return false;
+        }
+
+        //ak novy mail nie je prazdny retazec, tak ho nastavim
+        if ($newMail != ''){
+            $loggedUser->setMail($newMail);
+            $_SERVER['name'] = $newMail;
+        }else{
+            return false;
+        }
+
+        //nakoniec ulozim zmeny prihlaseneho uzivatela aj v databaze
+        $loggedUser->save();
+        return true;
+
+    }
+
 }

@@ -5,6 +5,13 @@
     <div class="col-sm-2"></div>
 
     <div class="col-sm-8 block">
+
+        <?php if($data['error'] != ''){?>
+            <div class="alert alert-danger" role="alert">
+                <?=$data['error']?>
+            </div>
+        <?php }?>
+
         <h4>Prihlásenie</h4>
         <form name="loginForm" method="post" action="?c=auth&a=login">
             <div class="mb-3">
@@ -19,8 +26,7 @@
 
             <div class="flex">
                 <button type="submit" class="btn btn-primary">Prihlásiť sa</button>
-
-Nemáš u nás ešte konto?
+                    Nemáš u nás ešte konto?
                 <a href="?c=auth&a=registrationForm" class="text-info">Zaregistruj sa</a>
             </div>
         </form>
