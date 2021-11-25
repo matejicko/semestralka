@@ -2,7 +2,10 @@
 
 namespace App\Controllers;
 
+use App\AccountHandler;
 use App\Core\Responses\Response;
+use App\Models\country;
+use App\Models\recipe;
 use App\SearchManager;
 
 class recipesController extends \App\Controllers\AControllerRedirect
@@ -19,7 +22,12 @@ class recipesController extends \App\Controllers\AControllerRedirect
 
     public function addRecipeForm()
     {
-        return $this->html();
+        if (AccountHandler::getLoggedUser() != null){
+            return $this->html();
+        }else{
+            $this->redirect('fail', 'permissionDenied');
+        }
+
     }
 
     public function addRecipe()
@@ -39,7 +47,13 @@ class recipesController extends \App\Controllers\AControllerRedirect
 
     public function showRecipe()
     {
-        return $this->html();
+        $id = intval($this->request()->getGet()['id']);
+        $recipe = recipe::getOne($id);
+        $country = country::getOne($recipe->getCountryId());
+        return $this->html( [
+            'recipe' => $recipe,
+            'country' => $country
+        ]);
     }
 
     public function findRecipe(){

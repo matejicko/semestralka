@@ -78,7 +78,7 @@ class AccountHandler
             return false;
         }
 
-        //nakoniec ulozim zmeny prihlaseneho uzivatela aj v databaze
+        //nakoniec ulozim zmeny prihlaseneho uzivatela aj v databaze a dam vediet, ze sa edit podaril
         $loggedUser->save();
         return true;
 

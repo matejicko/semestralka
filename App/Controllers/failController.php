@@ -19,4 +19,9 @@ class failController extends AControllerRedirect
     {
         return $this->html();
     }
+
+    public function permissionDenied()
+    {
+        return $this->html();
+    }
 }

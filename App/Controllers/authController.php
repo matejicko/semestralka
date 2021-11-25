@@ -55,7 +55,7 @@ class authController extends \App\Controllers\AControllerRedirect
             $this->redirect('home');
         }else{
             $this->redirect('auth', 'registrationForm',
-                ['error' => 'Nepodarilo sa zaregistrovať!']);
+                ['error' => 'Nepodarilo sa zaregistrovať! Pravdepodobne je tvoja prezývka už použitá, alebo k tomuto e-mailu už existuje konto.']);
         }
 
     }

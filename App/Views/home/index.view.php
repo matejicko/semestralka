@@ -8,7 +8,7 @@
         <div class="col-sm-8">
             <div class="input-group mb-3">
                 <h1>Vyhľadávanie receptov</h1>
-                <form class="input-group mb-3" action="?c=recipes&a=findRecipe">
+                <form method="post" class="input-group mb-3" action="?c=recipes&a=findRecipe">
                     <input type="text" class="form-control" name="title"
                            placeholder="Vyhľadať na základe názvu receptu...">
                     <button class="btn" type="submit">Vyhľadaj</button>

@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\AccountHandler;
 use App\Authentification;
 use App\Core\Responses\Response;
+use App\Deleter;
 use App\Models\user;
 use App\RecipesHandler;
 
@@ -31,7 +32,20 @@ class accountController extends AControllerRedirect
     }
 
     public function deleteAccount(){
-        AccountHandler::deleteAccount();
+        $user = AccountHandler::getLoggedUser();
+
+        if (isset($user)){
+            //najprv treba odhlasit uzivatela
+            Authentification::logOut();
+
+            if (Deleter::deleteUser($user->getId())){
+                $this->redirect('home', 'index');
+            }else{
+                $this->redirect('account');
+            }
+        }else{
+            $this->redirect('fail', 'permissionDenied');
+        }
     }
 
     public function settingsForm()
@@ -43,7 +57,8 @@ class accountController extends AControllerRedirect
                 'name' => $user->getName(),
                 'surname' => $user->getSurname(),
                 'mail' => $user->getMail(),
-                'photo' => $user->getPhoto()
+                'photo' => $user->getPhoto(),
+                'error' => $this->request()->getValue('error')
             ]);
         }else{
             $this->redirect('fail', 'userData');
@@ -55,7 +70,8 @@ class accountController extends AControllerRedirect
         if (AccountHandler::editAccount($this->request())){
             $this->redirect('account');
         }else{
-            $this->redirect('fail', 'userData');
+            $this->redirect('account', 'settingsForm',
+                ['error' => 'Nepodarilo sa nám zmeniť údaje na vašom profile :('] );
         }
     }
 

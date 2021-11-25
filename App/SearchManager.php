@@ -9,7 +9,7 @@ class SearchManager
     public static function findRecipesByTitle($title)
     {
         if ($title != null && $title != ''){
-            return recipe::getAll('title = "'.$title.'"');
+            return recipe::getAll('title LIKE "%'.$title.'%"');
         }
     }
 }

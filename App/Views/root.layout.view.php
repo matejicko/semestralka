@@ -8,6 +8,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
     <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css">-->
 
     <link rel="stylesheet" href="public/style.css">
@@ -42,11 +44,9 @@
                     <a class="nav-link" href="?c=home&a=about">O projekte</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="?c=home&a=recipe">Recept</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" href="?c=home&a=contact">Kontakt</a>
                 </li>
+                <li class="nav-link">|</li>
 
                 <?php if (\App\Authentification::isLogged()){?>
 
@@ -61,6 +61,10 @@
 
                     <li class="nav-item">
                         <a class="nav-link" href="?c=account">Účet</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="?c=account&a=settingsForm">Nastavenia</a>
                     </li>
 
                     <li class="nav-item">

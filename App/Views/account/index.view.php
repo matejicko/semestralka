@@ -17,7 +17,7 @@
                 <hr/>
                 <a class="btn" href="?c=account&a=settingsForm">Zmena údajov</a>
                 <a class="btn" href="?c=account&a=showMyRecipes">Moje recepty</a>
-                <a class="btn btn-danger" href="c=account&a=deleteAccount">Odstrániť účet</a>
+                <a class="btn btn-danger" href="?c=account&a=deleteAccount">Odstrániť účet</a>
 
             </div>
         <?php }?>
