@@ -20,6 +20,10 @@
     <!--Ikony z Font Awesome-->
     <script src="https://kit.fontawesome.com/f02d4df4d5.js" crossorigin="anonymous"></script>
 
+    <!--Krajsie alerty-->
+    <script src="sweetalert-dev.js"></script>
+    <link rel=”stylesheet” href="sweetalert.css">
+
 </head>
 <body>
 
@@ -28,7 +32,7 @@
     <div class="container-fluid">
 
         <a class="navbar-brand" href="index.html">
-            <img class="logo" alt="Logo stránky" src="public/images/Logo%20SK.png">
+            <img class="logo" alt="Logo stránky" src="public/images/logos/Logo%20SK.png">
         </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
@@ -103,7 +107,7 @@
         <div class="col-sm-5 text-end"  style="margin: auto"></div>
 
         <div class="col-sm-1 text-center"  style="margin: auto">
-            <img class="logo" alt="MG Logo" src="public/images/MG%20Logo%20white.png">
+            <img class="logo" alt="MG Logo" src="public/images/logos/MG%20Logo%20white.png">
         </div>
 
         <div class="col-sm-6">

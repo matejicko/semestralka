@@ -27,7 +27,8 @@ class authController extends \App\Controllers\AControllerRedirect
         $password = $this->request()->getValue('password');
 
         if(Authentification::verifyAndLogIn($mail, $password)){
-            $this->redirect('home');
+            $this->redirect('home', 'index',
+                [ 'success_message' => "Prihlásenie sa podarilo!"]);
         }else{
             $this->redirect('auth', 'loginForm',
                 ['error' => 'Užívateľské meno alebo heslo nie je správne!']);
@@ -38,7 +39,8 @@ class authController extends \App\Controllers\AControllerRedirect
     public function logout()
     {
         Authentification::logOut();
-        $this->redirect('home');
+        $this->redirect('home', 'index',
+            ['success_message' => 'Bol si úspešne odhlásený']);
     }
 
     public function registration()
@@ -52,7 +54,8 @@ class authController extends \App\Controllers\AControllerRedirect
         $checkPassword = $this->request()->getValue('password');
 
         if (Authentification::register($username, $name, $surname, $mail, $photo, $password)){
-            $this->redirect('home');
+            $this->redirect('home', 'index',
+                ['success_message' => 'Registrácia prebehla úspešne :)']);
         }else{
             $this->redirect('auth', 'registrationForm',
                 ['error' => 'Nepodarilo sa zaregistrovať! Pravdepodobne je tvoja prezývka už použitá, alebo k tomuto e-mailu už existuje konto.']);

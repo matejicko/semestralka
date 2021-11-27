@@ -15,13 +15,14 @@
             <div class="block">
 
                 <?php if (isset($data['country'])){ ?>
-                    <img class="vlajka img-fluid" alt="Vlajka (Taliansko)" src="taliansko-vlajka.png">
+                    <img class="vlajka img-fluid" alt="Vlajka (<?=$data['country']->getName()?>)"
+                         src="<?=$data['country']->getName()?>-vlajka.png">
                 <?php }?>
 
                 <h1><?=$data['recipe']->getTitle()?></h1>
 
                 <?php if (isset($data['country'])){ ?>
-                    <span class="badge bg-dark">Taliansko</span>
+                    <span class="badge bg-dark"><?=$data['country']?></span>
                 <?php }?>
 
                 <span class="badge bg-dark"><?=$data['recipe']->getPortions()?> porcii</span>

@@ -1,7 +1,14 @@
-<?php /** @var Array $data */
+<?php /** @var Array $data */ ?>
 
-if (count($data['recipes']) > 0){
-    foreach ($data['recipes'] as $recipe){?>
+<script src="public/scripts/deleteAlert.js"></script>
+
+<?php if (isset($data['recipes']) && count($data['recipes']) > 0 &&
+        isset($data['countries']) && count($data['countries']) > 0){
+    $countries = $data['countries'];
+
+    foreach ($data['recipes'] as $recipe){
+        $id = $recipe->getId();
+        $c_id = $recipe->getCountryId()?>
 
         <div class="row">
             <div class="col-sm-2"></div>
@@ -12,11 +19,11 @@ if (count($data['recipes']) > 0){
                 <img class="card-img-top img-fluid" src="<?=$recipe->getImage()?>" alt="Náhľad receptu" style="float: left; max-width: 20%">
 
                 <div class="card-body" style="float: left">
-                    <img class="vlajka" alt="Vlajka (Taliansko)" src="public/images/taliansko-vlajka.png">
+                    <img class="vlajka" alt="Vlajka (<?=$countries[$c_id]->getName()?>)" src="<?=$countries[$c_id]->getFlag()?>">
 
                     <div>
-                        <h2>Pizza</h2>
-                        <span class="badge bg-dark">Taliansko</span>
+                        <h2><?=$recipe->getTitle()?></h2>
+                        <span class="badge bg-dark"><?=$countries[$c_id]->getName()?></span>
                         <span class="badge bg-dark"><?=$recipe->getDuration()?></span>
                         <span class="badge bg-dark"><?=$recipe->getPortions()?> porcii</span>
 
@@ -25,10 +32,14 @@ if (count($data['recipes']) > 0){
                         <hr/>
                         <a class="btn" href="?c=recipes&a=showRecipe&id=<?=$recipe->getId()?>">Otvoriť</a>
 
-<!--                    Ak je prihlaseny uzivatel, moze upravit alebo odstranit recept-->
-                        <?php if(isset($_SESSION['name']) && $_SESSION['name'] != ''){ ?>
-                            <a class="btn btn-success" href="?c=account&a=showRecipe">Upraviť</a>
-                            <a class="btn btn-danger" href="c=account&a=deleteRecipe">Odstrániť</a>
+<!--                    Ak je prihlaseny uzivatel, moze upravit alebo odstranit recept, ak je samozrejme jeho-->
+                        <?php if(\App\Authentification::isLogged() &&
+                                    $recipe->getUserId() == \App\AccountHandler::getLoggedUser()->getId()){ ?>
+                            <a id="fake_button" class="btn btn-danger"
+                               onclick="deleteAlertSwal('Naozaj si praješ odstrániť tento recept?', 'Operácia sa nedá zvrátiť', <?=$id?>)">Odstrániť</a>
+
+                            <a id="delete_button_<?=$id?>" class="btn btn-danger"
+                               href="?c=recipes&a=deleteRecipe&which=<?=$id?>" style="visibility: hidden"></a>
                         <?php }?>
 
                     </div>

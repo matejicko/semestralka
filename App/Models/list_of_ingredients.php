@@ -7,9 +7,9 @@ use App\Core\Model;
 class list_of_ingredients extends Model
 {
     public function __construct(
-        public int $recipeId = 0,
-        public int $ingredientId = 0,
-        public int $unitId = 0,
+        public int $recipe_id = 0,
+        public int $ingredient_id = 0,
+        public int $unit_id = 0,
         public int $quantity = 0
     )
     {
@@ -32,15 +32,15 @@ class list_of_ingredients extends Model
      */
     public function getRecipeId(): int
     {
-        return $this->recipeId;
+        return $this->recipe_id;
     }
 
     /**
-     * @param int $recipeId
+     * @param int $recipe_id
      */
-    public function setRecipeId(int $recipeId): void
+    public function setRecipeId(int $recipe_id): void
     {
-        $this->recipeId = $recipeId;
+        $this->recipe_id = $recipe_id;
     }
 
     /**
@@ -48,15 +48,15 @@ class list_of_ingredients extends Model
      */
     public function getIngredientId(): int
     {
-        return $this->ingredientId;
+        return $this->ingredient_id;
     }
 
     /**
-     * @param int $ingredientId
+     * @param int $ingredient_id
      */
-    public function setIngredientId(int $ingredientId): void
+    public function setIngredientId(int $ingredient_id): void
     {
-        $this->ingredientId = $ingredientId;
+        $this->ingredient_id = $ingredient_id;
     }
 
     /**
@@ -64,15 +64,15 @@ class list_of_ingredients extends Model
      */
     public function getUnitId(): int
     {
-        return $this->unitId;
+        return $this->unit_id;
     }
 
     /**
-     * @param int $unitId
+     * @param int $unit_id
      */
-    public function setUnitId(int $unitId): void
+    public function setUnitId(int $unit_id): void
     {
-        $this->unitId = $unitId;
+        $this->unit_id = $unit_id;
     }
 
     /**
@@ -90,4 +90,5 @@ class list_of_ingredients extends Model
     {
         $this->quantity = $quantity;
     }
+
 }

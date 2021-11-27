@@ -1,5 +1,16 @@
 <?php /** @var Array $data */ ?>
 
+<?php if(isset($_GET['success_message'])){ ?>
+    <script>
+        swal({
+            title: "<?=$_GET['success_message']?>",
+            icon: "success",
+            button: "OK"
+        });
+    </script>
+<?php } ?>
+
+
 <!--Vyhľadávanie-->
 <div id="podklad" class="container-fluid" >
 

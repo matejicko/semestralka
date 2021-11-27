@@ -4,8 +4,10 @@ namespace App\Controllers;
 
 use App\AccountHandler;
 use App\Core\Responses\Response;
+use App\Deleter;
 use App\Models\country;
 use App\Models\recipe;
+use App\RecipesHandler;
 use App\SearchManager;
 
 class recipesController extends \App\Controllers\AControllerRedirect
@@ -23,7 +25,15 @@ class recipesController extends \App\Controllers\AControllerRedirect
     public function addRecipeForm()
     {
         if (AccountHandler::getLoggedUser() != null){
-            return $this->html();
+            $ingredientsNames = RecipesHandler::getAllIngredientsNames();
+            $unitShortcuts = RecipesHandler::getAllUnitsShortcuts();
+            $countriesNames = RecipesHandler::getAllCountriesNames();
+
+            return $this->html(
+                [   'ingredientsList' => $ingredientsNames,
+                    'unitsList' => $unitShortcuts,
+                    'countriesList' => $countriesNames]
+            );
         }else{
             $this->redirect('fail', 'permissionDenied');
         }
@@ -37,7 +47,13 @@ class recipesController extends \App\Controllers\AControllerRedirect
 
     public function deleteRecipe()
     {
-        return $this->html();
+        if(Deleter::deleteRecipe(intval($this->request()->getValue('which')))){
+            $this->redirect('home', 'index',
+                [ 'success_message' => 'Recept bol úspešne vymazaný']
+            );
+        }else{
+
+        }
     }
 
     public function editRecipe()
@@ -57,7 +73,9 @@ class recipesController extends \App\Controllers\AControllerRedirect
     }
 
     public function findRecipe(){
+        $recipes = SearchManager::findRecipesByTitle($this->request()->getValue('title'));
         return $this->html(
-            [ 'recipes' => SearchManager::findRecipesByTitle($this->request()->getValue('title'))]);
+            [ 'recipes' => $recipes,
+                'countries' => RecipesHandler::getCountriesForRecipesAsMap($recipes) ] );
     }
 }

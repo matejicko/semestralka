@@ -8,12 +8,12 @@ class recipe extends \App\Core\Model
     public function __construct(
         public int $id = 0,
         public ?string $title = null,
-        public int $countryId = 0,
+        public int $country_id = 0,
         public ?string $duration = null,
         public int $portions = 0,
         public ?string $process = null,
         public ?string $about = null,
-        public int $userId = 0,
+        public int $user_id = 0,
         public ?string $image = null
     )
     {
@@ -67,15 +67,15 @@ class recipe extends \App\Core\Model
      */
     public function getCountryId(): int
     {
-        return $this->countryId;
+        return $this->country_id;
     }
 
     /**
-     * @param int $countryId
+     * @param int $country_id
      */
-    public function setCountryId(int $countryId): void
+    public function setCountryId(int $country_id): void
     {
-        $this->countryId = $countryId;
+        $this->country_id = $country_id;
     }
 
     /**
@@ -147,15 +147,15 @@ class recipe extends \App\Core\Model
      */
     public function getUserId(): int
     {
-        return $this->userId;
+        return $this->user_id;
     }
 
     /**
-     * @param int $userId
+     * @param int $user_id
      */
-    public function setUserId(int $userId): void
+    public function setUserId(int $user_id): void
     {
-        $this->userId = $userId;
+        $this->user_id = $user_id;
     }
 
     /**
@@ -173,4 +173,6 @@ class recipe extends \App\Core\Model
     {
         $this->image = $image;
     }
+
+
 }

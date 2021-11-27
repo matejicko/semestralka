@@ -17,11 +17,16 @@
                 <hr/>
                 <a class="btn" href="?c=account&a=settingsForm">Zmena údajov</a>
                 <a class="btn" href="?c=account&a=showMyRecipes">Moje recepty</a>
-                <a class="btn btn-danger" href="?c=account&a=deleteAccount">Odstrániť účet</a>
 
+                <a id="fake_button" class="btn btn-danger" href="#"
+                   onclick="deleteAlertSwal('Naozaj si praješ odstrániť účet?', 'Táto akcia sa nedá zvrátiť')">Odstrániť účet</a>
+
+                <a id="delete_button" href="?c=account&a=deleteAccount" style="visibility: hidden"></a>
             </div>
         <?php }?>
     </div>
 
     <div class="col-sm-2"></div>
 </div>
+
+<script src="public/scripts/deleteAccountAlert.js"></script>

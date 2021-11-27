@@ -38,13 +38,13 @@ class AccountHandler
         $newSurname = $request->getValue('surname');
         $newMail = $request->getValue('mail');
 
-        $checkUsers = user::getAll('username = "'.$newUsername.'" OR mail="'.$newMail.'"');
+        $checkUsers = user::getAll('id <>'.$loggedUser->getId().' AND (username = "'.$newUsername.'" OR mail="'.$newMail.'")');
 
         //ak by sa uz nachadzal v DB user s rovnakym usernameom alebo mailom (jedinecnymi identifikatormi)
         if ($checkUsers != null){
             $checkUser = $checkUsers[0];
-            if ($loggedUser->getUsername() != $checkUser->getUsername() ||
-                    $loggedUser->getMail() != $checkUser->getMail()){
+            if ($newUsername == $checkUser->getUsername() ||
+                    $newMail == $checkUser->getMail()){
                 return false;
             }
         }

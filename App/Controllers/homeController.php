@@ -14,7 +14,9 @@ class homeController extends \App\Controllers\AControllerRedirect
 
     public function index()
     {
-        return $this->html();
+        return $this->html(
+            ['success_message' => $this->request()->getValue('success_message')]
+        );
     }
 
     public function contact()

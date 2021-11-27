@@ -21,31 +21,31 @@
                 <?php }?>
 
                 <div class="mb-3">
-                    <label for="nickname_input" class="form-label">Tvoja prezývka:</label>
+                    <label for="nickname_input" class="form-label">Tvoja nová prezývka:</label>
                     <input name="username" type="text" class="form-control" id="nickname_input"
                            aria-describedby="nickname_help" value="<?=$data['username']?>" required>
-                    <div id="nickname_help" class="form-text">Zadaj prezývku, pod ktorou budeš vystupovať na tejto stránke.</div>
+                    <div id="nickname_help" class="form-text">Zadaj svoju novú prezývku. (Môže ostať aj rovnaká)</div>
                 </div>
 
                 <div class="mb-3">
-                    <label for="email_input" class="form-label">Tvoj e-mail:</label>
+                    <label for="email_input" class="form-label">Tvoj nový e-mail:</label>
                     <input name="mail" type="text" class="form-control" id="email_input"
                            aria-describedby="email_help" value="<?=$data['mail']?>" required>
-                    <div id="email_help" class="form-text">Zadaj svoj e-mail.</div>
+                    <div id="email_help" class="form-text">Zadaj svoju nový e-mail. (Môže ostať aj rovnaký)</div>
                 </div>
 
                 <div class="mb-3">
-                    <label for="name_input" class="form-label">Tvoje meno:</label>
+                    <label for="name_input" class="form-label">Tvoje nové meno:</label>
                     <input name="name" type="text" class="form-control" id="name_input"
                            aria-describedby="name_help" value="<?=$data['name']?>" required>
-                    <div id="name_help" class="form-text">Uveď prosím svoje skutočné meno.</div>
+                    <div id="name_help" class="form-text">V prípade, že si sa prekrstil...</div>
                 </div>
 
                 <div class="mb-3">
-                    <label for="surname_input" class="form-label">Tvoje priezvisko:</label>
+                    <label for="surname_input" class="form-label">Tvoje nové priezvisko:</label>
                     <input name="surname" type="text" class="form-control" id="surname_input"
                            aria-describedby="surname_help" value="<?=$data['surname']?>" required>
-                    <div id="surname_help" class="form-text">Uveď prosím svoje skutočné priezvisko.</div>
+                    <div id="surname_help" class="form-text">V prípade zmeny priezviska...</div>
                 </div>
             <?php }?>
 

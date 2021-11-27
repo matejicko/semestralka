@@ -6,6 +6,7 @@ use App\AccountHandler;
 use App\Authentification;
 use App\Core\Responses\Response;
 use App\Deleter;
+use App\Models\country;
 use App\Models\user;
 use App\RecipesHandler;
 
@@ -39,7 +40,8 @@ class accountController extends AControllerRedirect
             Authentification::logOut();
 
             if (Deleter::deleteUser($user->getId())){
-                $this->redirect('home', 'index');
+                $this->redirect('home', 'index',
+                    [ 'success_message' => 'Tvoj účet bol úspešne odstránený!']);
             }else{
                 $this->redirect('account');
             }
@@ -68,16 +70,20 @@ class accountController extends AControllerRedirect
     public function edit()
     {
         if (AccountHandler::editAccount($this->request())){
-            $this->redirect('account');
+            $this->redirect('home', 'index',
+                [ 'success_message' => 'Zmeny boli úspešne nahraté!' ]);
         }else{
             $this->redirect('account', 'settingsForm',
-                ['error' => 'Nepodarilo sa nám zmeniť údaje na vašom profile :('] );
+                [ 'error' => 'Nepodarilo sa nám zmeniť údaje na vašom profile. Pravdepodobne už evidujeme konto s vašou novou prezývkou alebo e-mailom...' ]);
         }
     }
 
     public function showMyRecipes(){
         $user = AccountHandler::getLoggedUser();
-        $recepty = RecipesHandler::getRecipesForUser($user->getId());
-        return $this->html(['recipes' => $recepty]);
+        $recipes = RecipesHandler::getRecipesForUser($user->getId());
+        $countries = RecipesHandler::getCountriesForRecipesAsMap($recipes);
+        return $this->html(
+            [ 'recipes' => $recipes,
+                'countries' => $countries ]);
     }
 }
