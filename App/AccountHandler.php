@@ -73,7 +73,7 @@ class AccountHandler
         //ak novy mail nie je prazdny retazec, tak ho nastavim
         if ($newMail != ''){
             $loggedUser->setMail($newMail);
-            $_SERVER['name'] = $newMail;
+            $_SESSION['name'] = $newMail;
         }else{
             return false;
         }
