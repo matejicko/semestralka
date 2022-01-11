@@ -5,6 +5,12 @@ let usernameCorrect = false;
 
 let usernameRegex = new RegExp("^(?=[a-zA-Z0-9._]{3,20}$)(?!.*[_.]{2})[^_.].*[^_.]$");
 
+//--------------------------------MAIL--------------------------------
+let email = document.getElementById('email_input');
+let emailHelp = document.getElementById('email_help');
+
+let emailRegex = new RegExp("^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$");
+
 //--------------------------------NAME--------------------------------
 let name = document.getElementById('name_input');
 let nameHelp = document.getElementById('name_help');
@@ -45,13 +51,32 @@ function testInputField(inputField, inputHelp, correctionFlag, regex, successMes
         inputHelp.style.color = successColor;
         inputHelp.innerText = successMessage;
         submitButton.disabled = false;
-        correctionFlag = true;
+        return true;
+        //correctionFlag = true;
     }else{
         inputHelp.style.color = failColor;
         inputHelp.innerText = failMessage;
         correctionFlag = false;
+        return false;
         //submitButton.disabled = true;
     }
+}
+
+/**Performs AJAX communication.
+ * Demands url on which is action performed.
+ * Returns boolean value of response.
+ */
+function boolAJAX(url){
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (data === 'false'){
+                return false;
+            }else{
+                return true;
+            }
+        });
 }
 
 username.oninput = function () {
@@ -59,13 +84,52 @@ username.oninput = function () {
     let failMessage = "Použivateľské meno musí byť dlhé 3 až 20 znakov, musí obsahovať len písmena, číslice, '.' a '_'. " +
         "Bodkou a podtržníkom nesmie začínať ani končiť a taktiež sa tieto znaky nesmú ísť priamo za sebou";
 
-    testInputField(username, usernameHelp, usernameCorrect, usernameRegex, successMessage, failMessage);
+    if (testInputField(username, usernameHelp, usernameCorrect, usernameRegex, successMessage, failMessage)){
+
+        let via = "?c=auth&a=isUniqueUsername&username=" + username.value;
+
+        fetch(via)
+            .then(response => response.json())
+            .then(data => {
+                if (data === 'false'){
+                    usernameHelp.innerText = "Toto používateľské meno je už obsadené :(";
+                    usernameHelp.style.color = failColor;
+                }else{
+                    //return true;
+                }
+            });
+
+        // if (!boolAJAX(via)){
+        //
+        // }else{
+        //     usernameHelp.innerText = successMessage;
+        //     usernameHelp.style.color = successColor;
+        // }
+
+    };
+}
+
+email.oninput = function (){
+    if (emailRegex.test(email.value)){
+        let via = "?c=auth&a=isUniqueMail&mail=" + email.value;
+
+        fetch(via)
+            .then(response => response.json())
+            .then(data => {
+                if (data === 'false'){
+                    emailHelp.innerText = "Tento e-mail je už obsadený :(";
+                    emailHelp.style.color = failColor;
+                }else{
+                    emailHelp.innerText = "Tento e-mail môže byť použitý :)";
+                    emailHelp.style.color = successColor;
+                }
+            });
+    }
 }
 
 name.oninput = function () {
     let successMessage = "Meno spĺňa všetky podmienky! :)";
     let failMessage = "Meno musí byť aspoň 3 znaky a najviac 32 znakov dlhé, musí začínať veľkým písmenom a nesmie obsahovať špeciálne znaky.";
-
 
     //testInputField(name, nameHelp, nameCorrect, nameLengthRegex, successMessage, failMessage);
     testInputField(name, nameHelp, nameCorrect, nameRegex, successMessage, failMessage);

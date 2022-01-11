@@ -54,7 +54,6 @@ class authController extends \App\Controllers\AControllerRedirect
         $checkPassword = $this->request()->getValue('password');
 
         if (Authentification::register($username, $name, $surname, $mail, $photo, $password, $checkPassword)){
-
             Authentification::verifyAndLogIn($mail, $password); //after succesful registration it is convenient to remain logged in
 
             $this->redirect('home', 'index',
@@ -69,6 +68,22 @@ class authController extends \App\Controllers\AControllerRedirect
     public function registrationForm()
     {
         return $this->html(['error' => $this->request()->getValue('error')]);
+    }
+
+    public function isUniqueUsername(){
+        if (Authentification::isUniqueUsername($this->request()->getValue('username'))){
+            return $this->json('true');
+        }else{
+            return $this->json('false');
+        };
+    }
+
+    public function isUniqueMail(){
+        if (Authentification::isUniqueMail($this->request()->getValue('mail'))){
+            return $this->json('true');
+        }else{
+            return $this->json('false');
+        };
     }
 
 

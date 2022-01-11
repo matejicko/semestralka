@@ -66,4 +66,27 @@ class Authentification
         }
 
     }
+
+    public static function isUniqueUsername(mixed $username)
+    {
+        $user = user::getAll('username="'.$username.'"');
+
+        if (isset($user[0])){
+            return false;
+        }else{
+            return true;
+        }
+
+    }
+
+    public static function isUniqueMail(mixed $mail)
+    {
+        $user = user::getAll('mail="'.$mail.'"');
+
+        if (isset($user[0])){
+            return false;
+        }else{
+            return true;
+        }
+    }
 }

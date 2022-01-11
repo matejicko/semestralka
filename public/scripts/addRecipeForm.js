@@ -4,7 +4,7 @@ function appendLine(){
     let row = document.createElement('div');
     row.className = "row";
 
-    //----------------------Množstvo--------------------------
+    //----------------------Quantity--------------------------
 
     let col1 = document.createElement('div')
     col1.className = "col-auto";
@@ -17,7 +17,7 @@ function appendLine(){
 
     col1.appendChild(valueInput);
 
-    //----------------------Jednotka--------------------------
+    //----------------------Unit--------------------------
 
     let col2 = document.createElement('div')
     col2.className = "col-auto";
@@ -28,7 +28,7 @@ function appendLine(){
 
     col2.appendChild(unitSelect);
 
-    //----------------------Surovina--------------------------
+    //----------------------Ingredient--------------------------
 
     let col3 = document.createElement('div')
     col3.className = "col-auto";
