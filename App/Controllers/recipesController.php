@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\AccountHandler;
 use App\Core\Responses\Response;
 use App\Deleter;
+use App\FormatChecker;
 use App\Models\country;
 use App\Models\recipe;
 use App\RecipesHandler;
@@ -73,9 +74,15 @@ class recipesController extends \App\Controllers\AControllerRedirect
     }
 
     public function findRecipe(){
-        $recipes = SearchManager::findRecipesByTitle($this->request()->getValue('title'));
-        return $this->html(
-            [ 'recipes' => $recipes,
-                'countries' => RecipesHandler::getCountriesForRecipesAsMap($recipes) ] );
+
+        if (FormatChecker::checkSearchingBarInput($this->request()->getValue('title'))){
+            $recipes = SearchManager::findRecipesByTitle($this->request()->getValue('title'));
+            return $this->html(
+                [ 'recipes' => $recipes,
+                    'countries' => RecipesHandler::getCountriesForRecipesAsMap($recipes) ] );
+        }else{
+            $this->redirect('home', 'index');
+        }
+
     }
 }

@@ -10,8 +10,7 @@ class AccountHandler
     {
         $users = user::getAll('mail="'.$_SESSION['name'].'"');
         if ($users != null){
-            $user = $users[0];
-            return $user;
+            return $users[0];
         }else{
             return null;
         }
@@ -21,9 +20,8 @@ class AccountHandler
     {
         $user = self::getLoggedUser();
         if ($user != null){
-            //najprv musim zmazat vsetky recepty pre dany ucet
-            //co si vyzaduje vymazat vsetky ingrediencie pripadajuce tomuto receptu
-            //
+            //all recipes belonging to such account has to be deleted at first
+            //it means that all recipe-ingredient connections has to be removed from list_of_ingredients
         }else{
             return false;
         }
@@ -40,7 +38,7 @@ class AccountHandler
 
         $checkUsers = user::getAll('id <>'.$loggedUser->getId().' AND (username = "'.$newUsername.'" OR mail="'.$newMail.'")');
 
-        //ak by sa uz nachadzal v DB user s rovnakym usernameom alebo mailom (jedinecnymi identifikatormi)
+        //in case that DB contains user(s) with same name or mail (which are unique identificators)
         if ($checkUsers != null){
             $checkUser = $checkUsers[0];
             if ($newUsername == $checkUser->getUsername() ||
@@ -49,36 +47,45 @@ class AccountHandler
             }
         }
 
-        //ak novy username nie je prazdny retazec, tak ho nastavim (unikatnost je riesena vyssie)
-        if ($newUsername != ''){
+        //if new username is not null or empty, then username change will be performed
+        if (FormatChecker::checkUsername($newUsername) &&
+            strcmp($loggedUser->getUsername(), $newUsername) != 0){ //in case that new username is different than present
+
             $loggedUser->setUsername($newUsername);
         }else{
             return false;
         }
 
-        //ak nove meno nie je prazdny retazec, tak ho nastavim
-        if ($newName != ''){
+        //if new name is not null or empty, then name change will be performed
+        if (FormatChecker::checkUsername($newName) &&
+            strcmp($loggedUser->getName(), $newName) != 0){
+
             $loggedUser->setName($newName);
         }else{
             return false;
         }
 
-        //ak nove priezvisko nie je prazdny retazec, tak ho nastavim
-        if ($newSurname != ''){
+        //if new surname is not null or empty, then surname change will be performed
+        if (FormatChecker::checkSurname($newSurname) &&
+            strcmp($loggedUser->getSurname(), $newSurname) != 0){
+
             $loggedUser->setSurname($newSurname);
+
         }else{
             return false;
         }
 
-        //ak novy mail nie je prazdny retazec, tak ho nastavim
-        if ($newMail != ''){
+        //if new mail is not null or empty, then mail change will be performed
+        if (FormatChecker::checkUsername($newMail) &&
+            strcmp($loggedUser->getMail(), $newMail) != 0){
+
             $loggedUser->setMail($newMail);
             $_SESSION['name'] = $newMail;
         }else{
             return false;
         }
 
-        //nakoniec ulozim zmeny prihlaseneho uzivatela aj v databaze a dam vediet, ze sa edit podaril
+        //at the end changes will be saved in DB
         $loggedUser->save();
         return true;
 

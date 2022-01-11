@@ -8,13 +8,17 @@ use App\Models\user;
 
 class Deleter
 {
+
+    /*Safely (with all his/her recipes) delete user carrying ID entered to this function
+     *
+     */
     public static function deleteUser($user_id)
     {
         $user = user::getOne($user_id);
 
-        //najprv treba zistit, ci sa vobec nachadza uzivatel s danym id
+        //if there is user with such ID
         if (isset($user)){
-            //najprv sa vymazu vsetky recepty daneho pouzivatela
+            //delete all recipes belonged to this user first
             $recipes = recipe::getAll('user_id = '.$user_id);
 
             if (isset($recipes)){
@@ -23,25 +27,28 @@ class Deleter
                 }
             }
 
-            //potom sa vymaze samotny pouzivatel
+            //after that, user deletion
             $user->delete();
             return true;
         }else{
-            //nepodarilo sa vymazat uzivatela, kedze sa nenachadza v DB
+            //it is impossible to delete non-existing user
             return false;
         }
     }
 
+    /* Safely (with all its belongings) delete recipe with ID passed as input parameter
+     *
+     */
     public static function deleteRecipe($recipe_id)
     {
         $recipe = recipe::getOne($recipe_id);
 
-        //najprv treba zistit ci sa dany recept nachadza v DB
+        //if there is recipe with such ID
         if (isset($recipe)){
-            //prve sa zmazu vsetky ingrediencie patriace receptu
+            //all connections between recipe and its ingredients has to be deleted first
             self::deleteIngredientsAssociatedToRecipe($recipe_id);
 
-            //potom sa vymaze zaznam z tabulky recipe, t.j cely recept
+            //after that, recipe deletion is performed
             $recipe->delete();
             return true;
         }else{
@@ -49,6 +56,9 @@ class Deleter
         }
     }
 
+    /* Safely delete all associated ingredients with recipe, which ID is input parameter
+    *
+    */
     private static function deleteIngredientsAssociatedToRecipe($recipe_id){
         $associations = list_of_ingredients::getAll('recipe_id = '.$recipe_id);
 

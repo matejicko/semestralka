@@ -19,6 +19,7 @@ class accountController extends AControllerRedirect
     public function index()
     {
         $user = AccountHandler::getLoggedUser();
+
         if ($user != null){
             return $this->html([
                 'username' => $user->getUsername(),

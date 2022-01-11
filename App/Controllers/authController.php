@@ -53,7 +53,10 @@ class authController extends \App\Controllers\AControllerRedirect
         $password = $this->request()->getValue('password');
         $checkPassword = $this->request()->getValue('password');
 
-        if (Authentification::register($username, $name, $surname, $mail, $photo, $password)){
+        if (Authentification::register($username, $name, $surname, $mail, $photo, $password, $checkPassword)){
+
+            Authentification::verifyAndLogIn($mail, $password); //after succesful registration it is convenient to remain logged in
+
             $this->redirect('home', 'index',
                 ['success_message' => 'Registrácia prebehla úspešne :)']);
         }else{
