@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Models\user;
+use mysql_xdevapi\Exception;
 
 class Authentification
 {
@@ -12,13 +13,27 @@ class Authentification
         //input has to fit exact format
         if (FormatChecker::checkEmail($email) &&
             FormatChecker::checkPassword($password)) {
-            $user = user::getAll('mail ="' . $email . '" AND password = "' . $password . '"');
 
+            //try to fetch user from DB
+            try{
+                $user = user::getAll('mail ="' . $email.'"');
+            }catch(Exception){
+                return false;
+            }
+
+            //if user is flawlessly fetched from DB, which means that user really exists
             if ($user != null) {
-                foreach ($user as $item) {
-                    $_SESSION['name'] = $item->getMail();
+
+                //if given password is same as in DB
+                if (password_verify($password, $user[0]->getPassword())){
+
+                    //last step is to set session mail to currently logged user
+                    $_SESSION['name'] = $user[0]->getMail();
+                    return true;
+                }else {
+                    return false;
                 }
-                return true;
+
             } else {
                 return false;
             }
@@ -52,8 +67,13 @@ class Authentification
 
             //if there is nobody with same username or mail, new account can be created
             if ($checkUser == null) {
+
                 $newUser = new user(username: $username,
-                    name: $name, surname: $surname, mail: $mail, photo: $photo, password: $password);
+                    name: $name,
+                    surname: $surname,
+                    mail: $mail,
+                    photo: $photo,
+                    password: password_hash($password, PASSWORD_DEFAULT));
 
                 $newUser->save();
 

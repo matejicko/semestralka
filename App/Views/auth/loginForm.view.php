@@ -17,7 +17,7 @@
             <div class="mb-3">
                 <label for="email_input" class="form-label">E-mailova adresa:</label>
                 <input name="email" type="email" class="form-control" id="email_input" aria-describedby="emailHelp">
-                <div id="emailHelp" class="form-text">Random help k mailu.</div>
+                <div id="emailHelp" class="form-text">Zadaj mail, pod ktorým si sa registroval.</div>
             </div>
             <div class="mb-3">
                 <label for="password_input" class="form-label">Heslo:</label>
