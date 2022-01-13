@@ -11,7 +11,7 @@ class RecipesHandler
 {
     public static function getRecipesForUser($user_id)
     {
-        return recipe::getAll('user_id = "'.$user_id.'"');
+        return recipe::getAll('user_id = ?', [$user_id]);
     }
 
     public static function getAllIngredientsNames()

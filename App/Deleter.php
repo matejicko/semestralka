@@ -19,7 +19,7 @@ class Deleter
         //if there is user with such ID
         if (isset($user)){
             //delete all recipes belonged to this user first
-            $recipes = recipe::getAll('user_id = '.$user_id);
+            $recipes = recipe::getAll('user_id = ?', [$user_id]);
 
             if (isset($recipes)){
                 foreach($recipes as $recipe){
@@ -60,7 +60,7 @@ class Deleter
     *
     */
     private static function deleteIngredientsAssociatedToRecipe($recipe_id){
-        $associations = list_of_ingredients::getAll('recipe_id = '.$recipe_id);
+        $associations = list_of_ingredients::getAll('recipe_id = ?', [$recipe_id]);
 
         if (isset($associations)){
             foreach ($associations as $association){

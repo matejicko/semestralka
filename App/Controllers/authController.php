@@ -31,7 +31,7 @@ class authController extends \App\Controllers\AControllerRedirect
                 [ 'success_message' => "Prihlásenie sa podarilo!"]);
         }else{
             $this->redirect('auth', 'loginForm',
-                ['error' => 'Užívateľské meno alebo heslo nie je správne!']);
+                [ 'error' => 'Zadal si nesprávne meno alebo heslo!']);
         }
 
     }

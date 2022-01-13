@@ -16,7 +16,7 @@ class Authentification
 
             //try to fetch user from DB
             try{
-                $user = user::getAll('mail ="' . $email.'"');
+                $user = user::getAll('mail = ?',  [$email]);
             }catch(Exception){
                 return false;
             }
@@ -63,7 +63,7 @@ class Authentification
             strcmp($password, $checkPassword) == 0) { //confirmation password must fit password
 
             //check if there is already user with such username or mail
-            $checkUser = user::getAll('username="' . $username . '"OR mail="' . $mail . '"');
+            $checkUser = user::getAll('username = ? OR mail = ?', [$username, $mail]);
 
             //if there is nobody with same username or mail, new account can be created
             if ($checkUser == null) {
@@ -89,7 +89,7 @@ class Authentification
 
     public static function isUniqueUsername(mixed $username)
     {
-        $user = user::getAll('username="'.$username.'"');
+        $user = user::getAll('username = ?', [$username]);
 
         if (isset($user[0])){
             return false;
@@ -101,7 +101,7 @@ class Authentification
 
     public static function isUniqueMail(mixed $mail)
     {
-        $user = user::getAll('mail="'.$mail.'"');
+        $user = user::getAll('mail = ?', [$mail]);
 
         if (isset($user[0])){
             return false;

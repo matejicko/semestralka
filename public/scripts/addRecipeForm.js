@@ -1,3 +1,13 @@
+
+window.onload = function () {
+    let button = document.getElementById('add_line_button');
+
+    button.onclick = function () {
+        appendLine();
+    }
+
+}
+
 function appendLine(){
     let ingredientsGrid = document.getElementById('ingredients_grid');
 
@@ -24,7 +34,8 @@ function appendLine(){
 
     let unitSelect = document.createElement('select');
     unitSelect.className = "form-select";
-    unitSelect.list = document.getElementById('units_list');
+    unitSelect.innerHTML = document.getElementById('ingredient_unit_input_1').innerHTML;
+    //unitSelect.list = unitsList; //document.getElementById('units_list');
 
     col2.appendChild(unitSelect);
 
@@ -34,9 +45,8 @@ function appendLine(){
     col3.className = "col-auto";
 
     let ingredientInput = document.createElement('input');
-    let ingredientsList = document.getElementById('ingredients_list');
-    ingredientInput.className = "form-select";
-    ingredientInput.list = ingredientsList;
+    ingredientInput.className = "form-control";
+    ingredientInput.setAttribute('list', 'ingredients_list');
 
     col3.appendChild(ingredientInput);
 

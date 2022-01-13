@@ -8,7 +8,7 @@ class AccountHandler
 {
     public static function getLoggedUser()
     {
-        $users = user::getAll('mail="'.$_SESSION['name'].'"');
+        $users = user::getAll('mail = ?', [$_SESSION['name']]);
         if ($users != null){
             return $users[0];
         }else{
@@ -36,7 +36,7 @@ class AccountHandler
         $newSurname = $request->getValue('surname');
         $newMail = $request->getValue('mail');
 
-        $checkUsers = user::getAll('id <>'.$loggedUser->getId().' AND (username = "'.$newUsername.'" OR mail="'.$newMail.'")');
+        $checkUsers = user::getAll('id <> ? AND (username = ? OR mail = ?)', [$loggedUser->getId(), $newUsername, $newMail]);
 
         //in case that DB contains user(s) with same name or mail (which are unique identificators)
         if ($checkUsers != null){
