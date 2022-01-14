@@ -13,7 +13,15 @@
         <?php }?>
 
         <h4>Registrácia</h4>
-        <form name="loginForm" method="post" action="?c=auth&a=registration">
+
+        <form name="loginForm" method="post" action="?c=auth&a=registration" enctype="multipart/form-data">
+
+
+            <div class="mb-2">
+                <label for="image_input" class="form-label">Profilová fotka (nepovinná):</label>
+                <input name='photo' type="file" class="form-control" id="image_input">
+            </div>
+
             <div class="mb-3">
                 <label for="nickname_input" class="form-label">Tvoja prezývka:</label>
                 <input name="username" type="text" class="form-control"

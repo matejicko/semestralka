@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Config\Configuration;
 use App\Models\user;
 use mysql_xdevapi\Exception;
 
@@ -51,9 +52,17 @@ class Authentification
         session_destroy();
     }
 
-    public static function register(mixed $username, mixed $name, mixed $surname, mixed $mail, mixed $photo, mixed $password, mixed $checkPassword)
+    public static function register($request)
     {
-        //TODO::add Photo verification and insertion into databse
+        $username = $request->getValue('username');
+        $name = $request->getValue('name');
+        $surname = $request->getValue('surname');
+        $mail = $request->getValue('mail');
+
+        $password = $request->getValue('password');
+        $checkPassword = $request->getValue('password');
+        
+        //TODO::add Photo verification and insertion into database
         //input has to be in proper format and has to be not-null
         if (FormatChecker::checkUsername($username) &&
             FormatChecker::checkName($name) &&
@@ -64,6 +73,15 @@ class Authentification
 
             //check if there is already user with such username or mail
             $checkUser = user::getAll('username = ? OR mail = ?', [$username, $mail]);
+            $nameImg = null;
+
+            if (isset($_FILES['photo'])) {
+                if ($_FILES["photo"]["error"] == UPLOAD_ERR_OK) {
+                    $nameImg =  $username . "_PROFILE_" . $_FILES['photo']['name'];
+                    $via = Configuration::UPLOAD_DIR_PROFILE_PHOTO . "$nameImg";
+                    move_uploaded_file($_FILES['photo']['tmp_name'], $via);
+                }
+            }
 
             //if there is nobody with same username or mail, new account can be created
             if ($checkUser == null) {
@@ -72,10 +90,14 @@ class Authentification
                     name: $name,
                     surname: $surname,
                     mail: $mail,
-                    photo: $photo,
+                    photo: $via,
                     password: password_hash($password, PASSWORD_DEFAULT));
 
-                $newUser->save();
+                try{
+                    $newUser->save();
+                }catch(\Exception){
+                    return false;
+                }
 
                 return true;
             } else {

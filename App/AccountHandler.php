@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Config\Configuration;
 use App\Models\user;
 
 class AccountHandler
@@ -113,6 +114,22 @@ class AccountHandler
 
             }else{
                 return false;
+            }
+        }
+
+        //if user is willing to change his profile picture
+        if (isset($_FILES['photo'])) {
+            if ($_FILES["photo"]["error"] == UPLOAD_ERR_OK) {
+                $nameImg =  $loggedUser->getUsername() . "_PROFILE_" . $_FILES['photo']['name'];
+                $via = Configuration::UPLOAD_DIR_PROFILE_PHOTO . "$nameImg";
+
+                if (file_exists($loggedUser->getPhoto()))
+                {
+                    unlink($loggedUser->getPhoto()); //delete current profile photo
+                }
+
+                move_uploaded_file($_FILES['photo']['tmp_name'], $via); //upload new photo
+                $loggedUser->setPhoto($via);
             }
         }
 

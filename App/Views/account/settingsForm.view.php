@@ -1,6 +1,6 @@
 <?php /** @var Array $data */?>
 
-<form name="loginForm" method="post" action="?c=account&a=edit">
+<form name="loginForm" method="post" enctype="multipart/form-data" action="?c=account&a=edit">
 
     <div class="row">
         <div class="col-sm-2"></div>
@@ -19,6 +19,11 @@
                      alt="Profilová fotka" style="float: top; max-width: 20%"><br>
                 <hr/>
                 <?php }?>
+
+                <div class="mb-2">
+                    <label for="image_input" class="form-label">Nová profilová fotka:</label>
+                    <input name='photo' type="file" class="form-control" id="image_input">
+                </div>
 
                 <div class="mb-3">
                     <label for="nickname_input" class="form-label">Tvoja nová prezývka:</label>

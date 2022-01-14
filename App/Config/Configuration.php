@@ -18,5 +18,8 @@ class Configuration
 
     public const ROOT_LAYOUT = 'root.layout.view.php';
 
+    public const UPLOAD_DIR_PROFILE_PHOTO = 'public/images/profiles/';
+    public const UPLOAD_DIR_RECIPE_PHOTO = 'public/images/meals/';
+
     public const DEBUG_QUERY = false;
 }
