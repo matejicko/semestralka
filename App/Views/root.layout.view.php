@@ -17,17 +17,17 @@
     <!--Bootstrap 5-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!--Ikony z Font Awesome-->
+    <!--Icons from Font Awesome-->
     <script src="https://kit.fontawesome.com/f02d4df4d5.js" crossorigin="anonymous"></script>
 
-    <!--Krajsie alerty-->
+    <!--Fancy alerts-->
     <script src="sweetalert-dev.js"></script>
     <link rel=”stylesheet” href="sweetalert.css">
 
 </head>
 <body>
 
-<!--Vrchné menu, pri resize pribudne moznost rozkliknut moznosti-->
+<!--Main navigation bar - menu-->
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
     <div class="container-fluid">
 
@@ -52,16 +52,18 @@
                 </li>
                 <li class="nav-link">|</li>
 
+                <!--In case that user is logged in, there are more options to choose-->
                 <?php if (\App\Authentification::isLogged()){?>
 
-<!--                    <li class="nav-item dropdown">-->
-<!--                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Účet</a>-->
-<!--                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">-->
-<!--                            <li><a class="dropdown-item" href="#">Nastavenia účtu</a></li>-->
-<!--                            <li><a class="dropdown-item" href="#">Moje recepty</a></li>-->
-<!--                            <li><a class="dropdown-item" href="#">Odhlásiť sa</a></li>-->
-<!--                        </ul>-->
-<!--                    </li>-->
+                    <li class="nav-item">
+                        <a class="nav-link" href="?c=account&a=showMyRecipes">Moje Recepty</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="?c=recipes&a=addRecipeForm">Pridať recept</a>
+                    </li>
+
+                    <li class="nav-link">|</li>
 
                     <li class="nav-item">
                         <a class="nav-link" href="?c=account">Účet</a>

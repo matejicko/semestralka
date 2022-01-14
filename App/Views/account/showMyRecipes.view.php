@@ -56,7 +56,7 @@ if (isset($data['recipes']) && count($data['recipes']) > 0 &&
         <div class="col-sm-8">
             <div class="alert alert-danger" role="alert">
                 Zatiaľ si nepridal žiaden recept...
-                <a class="btn float-right" href="#">
+                <a class="btn float-right" href="?c=recipes&a=addRecipeForm">
                     Pridať recept
                 </a>
             </div>

@@ -47,6 +47,28 @@
                            aria-describedby="surname_help" value="<?=$data['surname']?>" required>
                     <div id="surname_help" class="form-text">V prípade zmeny priezviska...</div>
                 </div>
+
+                <div class="mb-3">
+                    <label for="password_input" class="form-label">Tvoje nové heslo:</label>
+                    <input name="new_password" type="password" class="form-control" id="password_input"
+                           aria-describedby="password_help" maxlength="64">
+                    <div id="password_help" class="form-text">V prípade, že chceš zmeniť heslo zadaj ho do poľa nad tebou, v opačnom prípade ti ostane aktuálne heslo.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password_verify_input" class="form-label">Potvrdenie nového hesla:</label>
+                    <input name="new_password_check" type="password" class="form-control" id="password_verify_input"
+                           aria-describedby="password_verify_help" maxlength="64">
+                    <div id="password_verify_help" class="form-text">Zadaj prosím svoje nové heslo ešte raz.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="check_password_input" class="form-label">Zadaj aktuálne heslo:</label>
+                    <input name="password" type="password" class="form-control" id="check_password_input"
+                           aria-describedby="password_help" maxlength="64" required>
+                    <div id="password_help" class="form-text">Zadaj aktuálne heslo pre potvrdenie zmien.</div>
+                </div>
+
             <?php }?>
 
             <button type="submit" class="btn btn-primary">Ulož zmeny</button>
@@ -58,3 +80,5 @@
 
 
 </form>
+
+<script src="public/scripts/formChecker.js"></script>

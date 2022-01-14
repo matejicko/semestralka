@@ -3,7 +3,7 @@
 
 
 <!--Form for adding recipe-->
-<form name="recipeUploadForm" method="post">
+<form name="recipeUploadForm" method="post" action="?c=recipes&a=addRecipe">
 
     <!--Title and photo-->
     <div class="row">
@@ -38,13 +38,13 @@
             <div class="mb-2">
                 <label for="country_input" class="form-label">Krajina:</label>
                 <select name='country' class="form-select" name="country_input" aria-label="Default select example">
-                    <option selected>Vyber krajinu</option>
+                    <option value="" disabled selected>Vyber krajinu</option>
 
                     <?php if (isset($data['countriesList'])){
                         $countriesList = $data['countriesList'];
-                        for ($i = 1; $i < count($countriesList); $i++){ ?>
+                        for ($i = 0; $i < count($countriesList); $i++){ ?>
 
-                            <option value="<?=$i?>"> <?=$countriesList[$i]?> </option>
+                            <option value="<?=$countriesList[$i]?>"><?=$countriesList[$i]?></option>
 
                         <?php }
                     }?>
@@ -55,13 +55,13 @@
                 <label for="duration_input" class="form-label">Dĺžka trvania:</label>
                 <input name='duration_value' type="number" step="0.1" class="form-control" id="duration_value_input" >
                 <select name='duration_unit' class="form-select" name="duration_unit_input" aria-label="Default select example">
-                    <option selected>Vyber jednotku:</option>
-                    <option value="hodina"></option>
-                    <option value="hodín"></option>
-                    <option value="minúta"></option>
-                    <option value="minút"></option>
-                    <option value="deň"></option>
-                    <option value="dní"></option>
+                    <option value="" disabled selected>Vyber jednotku:</option>
+                    <option value="hodina">hodina</option>
+                    <option value="hodín">hodín</option>
+                    <option value="minúta">minúta</option>
+                    <option value="minút">minút</option>
+                    <option value="deň">deň</option>
+                    <option value="dní">dní</option>
                 </select>
             </div>
 
@@ -86,17 +86,17 @@
             <div class="row">
                 <div class="col-auto">
                     <label for="ingredient_value_input" class="form-label">Množstvo:</label>
-                    <input name='ingredient_value' type="number" step="0.1" class="form-control" id="ingredient_value_input">
+                    <input name='ingredient_value_1' type="number" step="0.1" class="form-control" id="ingredient_value_input" value="1">
                 </div>
                 <div class="col-auto">
                     <label for="ingredient_unit_input_1" class="form-label">Jednotka:</label>
-                    <select id="ingredient_unit_input_1" name="ingredient_unit" class="form-select">
+                    <select id="ingredient_unit_input_1" name="ingredient_unit_1" class="form-select">
 
-                        <option selected>Vyber jednotku</option>
+                        <option value="" disabled selected>Vyber jednotku</option>
 
                         <?php if (isset($data['unitsList'])){
                             $unitsList = $data['unitsList'];
-                            for ($i = 1; $i < count($unitsList); $i++){ ?>
+                            for ($i = 0; $i < count($unitsList); $i++){ ?>
 
                                 <option value="<?=$unitsList[$i]?>"><?=$unitsList[$i]?></option>
 
@@ -109,7 +109,7 @@
                 <div class="col-auto">
                     <label for="ingredient_input" class="form-label">Surovina:</label>
 
-                    <input id='ingredient_input_1' name="ingredient_input" type="text" class="form-control">
+                    <input id='ingredient_input_1' name="ingredient_1" type="text" class="form-control" list="ingredient_list">
                         <datalist id="ingredients_list">
                             <?php if (isset($data['ingredientsList'])){
                                 $ingredientsList = $data['ingredientsList'];
@@ -124,7 +124,8 @@
                 </div>
 
                 <div class="col-auto">
-                    <button id='add_line_button' type="button" class="btn" style="float:bottom">+</button>
+                    <label for="add_line_button" class="form-label">Pridať ďalšiu</label><br>
+                    <button id='add_line_button' name="add_line_button" type="button" class="btn" style="float:bottom">+</button>
                 </div>
 
             </div>
@@ -142,7 +143,7 @@
 
             <h4>Proces</h4>
             <div class="mb-2">
-                <textarea type="text" class="form-control" name="process_input" required></textarea>
+                <textarea type="text" class="form-control" name="process" required></textarea>
             </div>
         </div>
 
@@ -157,7 +158,7 @@
         <div class="col-sm-8 block">
             <h4>O recepte</h4>
             <div class="mb-2">
-                <textarea type="text" class="form-control" name="about_input"></textarea>
+                <textarea type="text" class="form-control" name="about"></textarea>
             </div>
         </div>
 
@@ -171,7 +172,7 @@
 
         <div class="col-sm-8 block">
             <h4>Potvrdenie</h4>
-            <button type="submit" class="btn btn-primary">Uverejniť</button>
+            <button id="submit_button" type="submit" class="btn btn-primary">Uverejniť</button>
             Kliknutím na tlačídlo sa recept odošle a pridá na stránku.
         </div>
 

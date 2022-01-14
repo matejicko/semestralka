@@ -25,8 +25,7 @@
             </div>
 
             <div class="flex">
-                <!--type="submit"-->
-                <button type="submit" id="submit_button" class="btn btn-primary" action="?c=auth&a=login">Prihlásiť sa</button>
+                <button type="submit" id="submit_button" class="btn btn-primary">Prihlásiť sa</button>
                     Nemáš u nás ešte konto?
                 <a href="?c=auth&a=registrationForm" class="text-info">Zaregistruj sa</a>
             </div>

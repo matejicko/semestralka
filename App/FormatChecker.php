@@ -26,11 +26,11 @@ class FormatChecker
     {
         //name guidance:    - has to start with capital
         //                  - special symbols allowed: '.' and '-'
-        //                  - name has to be long in range 3 to 32 characters
+        //                  - name has to be long in range 2 to 32 characters
 
         return ($name != null &&
             $name != '' &&
-            preg_match('/^([A-ZÀ-ÿ][-a-z.]{2,31})$/', $name));
+            preg_match('/^([A-ZÀ-ÿ][-a-z.]{1,31})$/', $name));
     }
 
     /*Check if surname passes non-nullity, not-emptiness and proper format
@@ -78,5 +78,10 @@ class FormatChecker
         return ($input != null &&
             $input != '' &&
             preg_match('/\b[A-ZÀ-ÿa-z0-9-. ]{3,64}$/', $input));
+    }
+
+    public static function checkNonNullityAndNonEmptiness($input)
+    {
+        return $input != null && $input != "";
     }
 }

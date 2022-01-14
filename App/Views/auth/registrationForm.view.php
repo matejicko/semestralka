@@ -64,4 +64,4 @@
     <div class="col-sm-2"></div>
 </div>
 
-<script src="public/scripts/registrationFormChecker.js"></script>
+<script src="public/scripts/formChecker.js"></script>

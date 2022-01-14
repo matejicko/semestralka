@@ -43,7 +43,11 @@ class recipesController extends \App\Controllers\AControllerRedirect
 
     public function addRecipe()
     {
-        return $this->html();
+        if (RecipesHandler::addRecipe($this->request())){
+
+        };
+
+        $this->redirect('home', 'index');
     }
 
     public function deleteRecipe()
