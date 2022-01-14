@@ -1,15 +1,21 @@
 <?php /** @var Array $data */ ?>
 
-
-
 <!--Form for adding recipe-->
-<form name="recipeUploadForm" method="post" action="?c=recipes&a=addRecipe">
+<form name="recipeUploadForm" method="post" action="?c=recipes&a=addRecipe" enctype="multipart/form-data">
+
 
     <!--Title and photo-->
     <div class="row">
+
         <div class="col-sm-2"></div>
 
         <div class="col-sm-8 block">
+
+            <?php if(isset($data['error']) && $data['error'] != ''){?>
+                <div class="alert alert-danger" role="alert">
+                    <?=$data['error']?>
+                </div>
+            <?php }?>
 
             <h4>Názov a fotka jedla</h4>
 

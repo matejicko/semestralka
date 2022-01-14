@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Config\Configuration;
 use App\Models\country;
 use App\Models\ingredient;
 use App\Models\list_of_ingredients;
@@ -74,25 +75,26 @@ class RecipesHandler
         return $mapOfCountries;
     }
 
-    public static function addRecipe(Core\Request $request)
+    public static function addRecipe(Core\Request $request, $picture)
     {
         //----------------------------------FETCHING INPUT FROM REQUEST----------------------------------
         //First segment of form - title and photo
         $title = $request->getValue('title');
-        $photo = $request->getValue('photo');
 
         //Second segment of form - attributes of recipe
-        $country_id = $request->getValue('country');
+        $country = $request->getValue('country');
         $duration_value = $request->getValue('duration_value');
         $duration_unit = $request->getValue('duration_unit');
         $portion = $request->getValue('portion');
 
+        $aaa = floatval($duration_value);
+
         //Third segment of form - ingredients
-        $i = 1;
+        $i = 0;
         while (1) {
-            $ingredient_value[$i] = $request->getValue('ingredient_value_' . $i);
-            $ingredient_unit[$i] = $request->getValue('ingredient_unit_' . $i);
-            $ingredient[$i] = $request->getValue('ingredient_' . $i);
+            $ingredient_value[$i] = $request->getValue('ingredient_value_' . ($i + 1));
+            $ingredient_unit[$i] = $request->getValue('ingredient_unit_' . ($i + 1));
+            $ingredient[$i] = $request->getValue('ingredient_' . ($i + 1));
 
             //in case of end of list of ingredients
             if (!(isset($ingredient_value[$i]) &&
@@ -109,24 +111,127 @@ class RecipesHandler
         $process = $request->getValue('process');
 
         //Fifth segment of form - about
-        $about = $request->getValue('process');
+        $about = $request->getValue('about');
 
-        //----------------------------------CONTROL DATA FORMAT----------------------------------
+        //----------------------------------CONTROL INPUT FORMAT AND CONSISTENCY----------------------------------
+        $recipe = new recipe();
 
-        //duration format control
-        if (FormatChecker::checkNonNullityAndNonEmptiness($duration_value) &&
-            FormatChecker::checkNonNullityAndNonEmptiness($duration_unit) &&
-            intval($duration_value) > 0){
-
-            $duration = $duration_value . " " . $duration_unit;
-        }else{
+        //title is mandatory, has to be maximum 64 chars long and <script> mark is forbidden
+        if (!FormatChecker::checkPlainText($title) || strlen($title) > 64){
             return false;
         }
 
-        //this function controls if ingredients input is correct and if needed, new ingredient is added to database
-        if (self::controlIngredientsInput($ingredient_value, $ingredient_unit, $ingredient)){
+        $recipe->setTitle($title);
 
+        if (isset($picture)) {
+            if ($picture["error"] == UPLOAD_ERR_OK) {
+                $nameImg =  $title . "_RECIPE_" . $picture['name'];
+                $via = Configuration::UPLOAD_DIR_RECIPE_PHOTO . "$nameImg";
+                move_uploaded_file($picture['tmp_name'], $via);
+
+                $recipe->setImage($via);
+            }
         }
+
+        //controls if country exists in DB
+        $countryCheck = country::getAll('name = ?', [$country]);
+        if (!isset($countryCheck[0])){
+            return false;
+        }
+
+        $recipe->setCountryId($countryCheck[0]->getId());
+
+        //duration format control
+        if (FormatChecker::checkNonNullityAndNonEmptiness($duration_value) &&
+            FormatChecker::checkNonNullityAndNonEmptiness($duration_unit)){
+
+            if (floatval($duration_value) > 0){
+                $duration = $duration_value . " " . $duration_unit;
+                $recipe->setDuration($duration);
+            }else{
+                return false; //duration has to be positive number
+            }
+        }
+
+        //portions control
+        if (FormatChecker::checkNonNullityAndNonEmptiness($portion)){
+            if (intval($portion) > 0){
+                $recipe->setPortions(intval($portion));
+            }else{
+                return false; //number of portions has to be positive number
+            }
+        }
+
+        //process field is mandatory
+        if (!FormatChecker::checkPlainText($process)){
+            return false;
+        }else{
+            $recipe->setProcess($process);
+        }
+
+        //about field is not mandatory
+        if (FormatChecker::checkNonNullityAndNonEmptiness($about)){
+
+            //if there is about section, it has to follow some rules, otherwise recipe won't be added
+            if (FormatChecker::checkPlainText($about)){
+                $recipe->setAbout($about);
+            }else{
+                return false;
+            }
+        }
+
+        //this function controls if ingredients input is correct and if needed, new ingredient is added to database
+        if (!self::controlIngredientsInput($ingredient_value, $ingredient_unit, $ingredient)){
+            return false;
+        }
+
+        //to add recipe, some user has to be logged in
+        $loggedUser = AccountHandler::getLoggedUser();
+        if ($loggedUser == null){
+            return false;
+        }else{
+            $recipe->setUserId($loggedUser->getId());
+        }
+
+        //----------------------------------FINALIZATION----------------------------------
+        //now when whole input is controlled, we can save recipe and transfer it to the database
+        $recipeId = 0;
+        try{
+            $recipes = recipe::getAll();
+            if (isset($recipes)){
+                $recipeId = $recipes[count($recipes) - 1]->getId() + 1;
+            }else{
+                $recipeId = 1;
+            }
+
+            //$recipe->setId($newId);
+            $recipe->save();
+        }catch(\Exception){
+            return false;
+        }
+
+        //all recipe-ingredient associations have to be stored in DB
+        for ($i = 0; $i < count($ingredient) - 1; $i++){
+            if (isset($ingredient_value[$i]) && isset($ingredient_unit[$i]) && isset($ingredient[$i])){
+                try{
+                    $quantity = floatval($ingredient_value);
+
+                    $ingredients = ingredient::getAll('name = ?', [$ingredient[$i]]);
+                    $units = unit::getAll('shortcut = ?', [$ingredient_unit[$i]]);
+
+                    $association = new list_of_ingredients(recipe_id: $recipeId,
+                        ingredient_id: $ingredients[0]->getId(),
+                        unit_id: $units[0]->getId(),
+                        quantity: $quantity);
+
+                    $association->save();
+                }catch(\Exception){
+                    return false;
+                }
+            }
+        }
+
+        return true;
 
     }
 
@@ -139,20 +244,13 @@ class RecipesHandler
      */
     private static function controlIngredientsInput(array $ingredient_value, array $ingredient_unit, array $ingredient)
     {
-        try {
-            $to_find_greatest_id = ingredient::getAll();
-            $greatest_id = $to_find_greatest_id[count($to_find_greatest_id) - 1]->getId();
-        } catch (\Exception) {
-            return false; //in case some error occurs while fetching data from database
-        }
-
 
         for ($i = 0; $i < count($ingredient) - 1; $i++) {
 
-            if ($ingredient_value[$i] != null) {
+            if ($ingredient_value[$i] != null){
 
                 //quantity of ingredient has to be greater than 0
-                if (intval($ingredient_value[$i] > 0)) {
+                if (floatval($ingredient_value[$i] > 0)) {
 
                     if ($ingredient[$i] != null && $ingredient_unit[$i] != null) {
                         try {
@@ -172,8 +270,7 @@ class RecipesHandler
 
                             //in case that user added new ingredient, ingredient is added to DB
                             if ($ing == null) {
-                                $greatest_id++;
-                                $new_ingredient = new ingredient(id: $greatest_id, name: $ingredient[$i]);
+                                $new_ingredient = new ingredient(name: $ingredient[$i]);
                                 try {
                                     $new_ingredient->save();
                                 } catch (\Exception) {
@@ -189,6 +286,8 @@ class RecipesHandler
                 } else { //in case that quantity of ingredient is below zero, process is failure
                     return false;
                 }
+            }else{ //in case that ingredient doesn't have its quantity set
+                return false;
             }
 
         }

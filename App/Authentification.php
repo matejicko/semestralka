@@ -62,7 +62,6 @@ class Authentification
         $password = $request->getValue('password');
         $checkPassword = $request->getValue('password');
         
-        //TODO::add Photo verification and insertion into database
         //input has to be in proper format and has to be not-null
         if (FormatChecker::checkUsername($username) &&
             FormatChecker::checkName($name) &&
@@ -73,7 +72,6 @@ class Authentification
 
             //check if there is already user with such username or mail
             $checkUser = user::getAll('username = ? OR mail = ?', [$username, $mail]);
-            $nameImg = null;
 
             if (isset($_FILES['photo'])) {
                 if ($_FILES["photo"]["error"] == UPLOAD_ERR_OK) {

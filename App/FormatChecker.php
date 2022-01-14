@@ -14,8 +14,7 @@ class FormatChecker
         //                    - '.' and '_' is not allowed in the beginning or at the end
         //                    - multiple characters '.'/'_' in row are not allowed
 
-        return ($username != null &&
-            $username != '' &&
+        return (self::checkNonNullityAndNonEmptiness($username) &&
             preg_match('/^(?=[a-zA-Z0-9._]{3,20}$)(?!.*[_.]{2})[^_.].*[^_.]$/', $username));
     }
 
@@ -28,8 +27,7 @@ class FormatChecker
         //                  - special symbols allowed: '.' and '-'
         //                  - name has to be long in range 2 to 32 characters
 
-        return ($name != null &&
-            $name != '' &&
+        return (self::checkNonNullityAndNonEmptiness($name) &&
             preg_match('/^([A-ZÀ-ÿ][-a-z.]{1,31})$/', $name));
     }
 
@@ -51,8 +49,7 @@ class FormatChecker
     {
         //e-mail guidance:  - pre-defined format by php
 
-        return ($email != null &&
-            $email != '' &&
+        return (self::checkNonNullityAndNonEmptiness($email) &&
             filter_var($email, FILTER_VALIDATE_EMAIL));
     }
 
@@ -65,8 +62,7 @@ class FormatChecker
         //                      - no special symbols allowed
         //                      - it has to contain at least one lowercase, one capital and one number
 
-        return ($password != null &&
-            $password != '' &&
+        return (self::checkNonNullityAndNonEmptiness($password) &&
             preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,}$)/', $password));
     }
 
@@ -75,13 +71,20 @@ class FormatChecker
         //searching bar input guidance:     - has to be at least 3 character long and maximum is 64
         //                                  - special symbols allowed: '.', '-' and ' '
 
-        return ($input != null &&
-            $input != '' &&
+        return (self::checkNonNullityAndNonEmptiness($input) &&
             preg_match('/\b[A-ZÀ-ÿa-z0-9-. ]{3,64}$/', $input));
     }
 
     public static function checkNonNullityAndNonEmptiness($input)
     {
         return $input != null && $input != "";
+    }
+
+    public static function checkPlainText($text)
+    {
+        //plain text guidance: - is forbidden to contain <script>
+
+        return self::checkNonNullityAndNonEmptiness($text) &&
+            !str_contains($text, '<script>');
     }
 }

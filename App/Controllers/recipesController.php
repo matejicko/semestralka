@@ -7,6 +7,7 @@ use App\Core\Responses\Response;
 use App\Deleter;
 use App\FormatChecker;
 use App\Models\country;
+use App\Models\ingredient;
 use App\Models\recipe;
 use App\RecipesHandler;
 use App\SearchManager;
@@ -43,11 +44,13 @@ class recipesController extends \App\Controllers\AControllerRedirect
 
     public function addRecipe()
     {
-        if (RecipesHandler::addRecipe($this->request())){
-
-        };
-
-        $this->redirect('home', 'index');
+        if (RecipesHandler::addRecipe($this->request(), $_FILES['photo'])){
+            $this->redirect('home', 'index',
+                [ 'success_message' => 'Recept bol úspešne pridaný']);
+        }else{
+            $this->redirect('recipes', 'addRecipeForm',
+                ['error' => 'Recept sa nepodarilo pridať. Skontroluj všetky vstupy...']);
+        }
     }
 
     public function deleteRecipe()

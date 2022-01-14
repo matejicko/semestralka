@@ -10,7 +10,7 @@ class list_of_ingredients extends Model
         public int $recipe_id = 0,
         public int $ingredient_id = 0,
         public int $unit_id = 0,
-        public int $quantity = 0
+        public float $quantity = 0
     )
     {
 
