@@ -22,7 +22,9 @@
 
                 <div class="mb-2">
                     <label for="image_input" class="form-label">Nová profilová fotka:</label>
-                    <input name='photo' type="file" class="form-control" id="image_input">
+                    <input name='photo' type="file" class="form-control" id="image_input"
+                           aria-describedby="photo_help">
+                    <div id="photo_help" class="form-text">Maximálna veľkosť súboru je 10MB!</div>
                 </div>
 
                 <div class="mb-3">

@@ -74,9 +74,11 @@ class recipesController extends \App\Controllers\AControllerRedirect
         $id = intval($this->request()->getGet()['id']);
         $recipe = recipe::getOne($id);
         $country = country::getOne($recipe->getCountryId());
+
         return $this->html( [
             'recipe' => $recipe,
-            'country' => $country
+            'country' => $country,
+            'ingredients_list' => RecipesHandler::getIngredientsListInRecipe($id)
         ]);
     }
 

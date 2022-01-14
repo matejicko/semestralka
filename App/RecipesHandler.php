@@ -204,7 +204,7 @@ class RecipesHandler
                 $recipeId = 1;
             }
 
-            //$recipe->setId($newId);
+            //$recipe->setId($recipeId);
             $recipe->save();
         }catch(\Exception){
             return false;
@@ -219,12 +219,15 @@ class RecipesHandler
                     $ingredients = ingredient::getAll('name = ?', [$ingredient[$i]]);
                     $units = unit::getAll('shortcut = ?', [$ingredient_unit[$i]]);
 
-                    $association = new list_of_ingredients(recipe_id: $recipeId,
-                        ingredient_id: $ingredients[0]->getId(),
-                        unit_id: $units[0]->getId(),
-                        quantity: $quantity);
+                    if (isset($ingredients[0]) && isset($units[0])){
+                        $association = new list_of_ingredients(recipe_id: $recipeId,
+                            ingredient_id: $ingredients[0]->getId(),
+                            unit_id: $units[0]->getId(),
+                            quantity: $quantity);
 
-                    $association->save();
+                        $association->save();
+                    }
+
                 }catch(\Exception){
                     return false;
                 }
@@ -250,7 +253,7 @@ class RecipesHandler
             if ($ingredient_value[$i] != null){
 
                 //quantity of ingredient has to be greater than 0
-                if (floatval($ingredient_value[$i] > 0)) {
+                if (floatval($ingredient_value[$i] >= 0)) {
 
                     if ($ingredient[$i] != null && $ingredient_unit[$i] != null) {
                         try {
@@ -293,5 +296,37 @@ class RecipesHandler
         }
 
         return true;
+    }
+
+    public static function getIngredientsListInRecipe(int $id)
+    {
+        $rows = list_of_ingredients::getAll('recipe_id = ?', [$id]);
+        $output = "";
+
+        foreach ($rows as $row){
+            $ingredientQuantity = $row->getQuantity();
+
+            $ingredient = ingredient::getOne($row->getIngredientId());
+            $ingredientName = $ingredient->getName();
+
+            //in case that no unit is used
+            if ($row->getUnitId() == 1){
+                if ($ingredientQuantity == 0 || $ingredientQuantity == 1){
+                    $output = $output . "&#9-&#9" . $ingredientName ."<br>";
+                }else{
+                    $output = $output . "&#9-&#9<b>" . $ingredientQuantity .
+                         "</b>&#9" . $ingredientName . "<br>";
+                }
+            }else{
+                $ingredientUnit = unit::getOne($row->getUnitId());
+                $ingredientUnitName = $ingredientUnit->getShortcut();
+
+                $output = $output . "&#9-&#9<b>" . $ingredientQuantity . " " .
+                    $ingredientUnitName . "</b>&#9" . $ingredientName ."<br>";
+            }
+
+        }
+
+        return $output;
     }
 }

@@ -3,6 +3,20 @@
 <!--Form for adding recipe-->
 <form name="recipeUploadForm" method="post" action="?c=recipes&a=addRecipe" enctype="multipart/form-data">
 
+    <?php if(isset($_GET['error']) && $_GET['error'] != ''){?>
+    <div class="row">
+
+        <div class="col-sm-2"></div>
+
+        <div class="col-sm-8 block">
+            <div class="alert alert-danger" role="alert">
+                <?=$_GET['error']?>
+            </div>
+        </div>
+        <div class="col-sm-2"></div>
+    </div>
+    <?php }?>
+
 
     <!--Title and photo-->
     <div class="row">
@@ -11,11 +25,7 @@
 
         <div class="col-sm-8 block">
 
-            <?php if(isset($data['error']) && $data['error'] != ''){?>
-                <div class="alert alert-danger" role="alert">
-                    <?=$data['error']?>
-                </div>
-            <?php }?>
+
 
             <h4>Názov a fotka jedla</h4>
 
@@ -26,7 +36,9 @@
 
             <div class="mb-2">
                 <label for="image_input" class="form-label">Náhľad receptu:</label>
-                <input name='photo' type="file" class="form-control" id="image_input">
+                <input name='photo' type="file" class="form-control" id="image_input"
+                       aria-describedby="photo_help">
+                <div id="photo_help" class="form-text">Maximálna veľkosť súboru je 10MB!</div>
             </div>
 
         </div>
@@ -44,7 +56,7 @@
             <div class="mb-2">
                 <label for="country_input" class="form-label">Krajina:</label>
                 <select name='country' class="form-select" name="country_input" aria-label="Default select example">
-                    <option value="" disabled selected>Vyber krajinu</option>
+                    <option value="" disabled>Vyber krajinu</option>
 
                     <?php if (isset($data['countriesList'])){
                         $countriesList = $data['countriesList'];
@@ -61,7 +73,7 @@
                 <label for="duration_input" class="form-label">Dĺžka trvania:</label>
                 <input name='duration_value' type="number" step="0.1" class="form-control" id="duration_value_input" >
                 <select name='duration_unit' class="form-select" name="duration_unit_input" aria-label="Default select example">
-                    <option value="" disabled selected>Vyber jednotku:</option>
+                    <option value="" disabled>Vyber jednotku:</option>
                     <option value="hodina">hodina</option>
                     <option value="hodín">hodín</option>
                     <option value="minúta">minúta</option>
@@ -98,7 +110,7 @@
                     <label for="ingredient_unit_input_1" class="form-label">Jednotka:</label>
                     <select id="ingredient_unit_input_1" name="ingredient_unit_1" class="form-select">
 
-                        <option value="" disabled selected>Vyber jednotku</option>
+                        <option value="" disabled>Vyber jednotku</option>
 
                         <?php if (isset($data['unitsList'])){
                             $unitsList = $data['unitsList'];
