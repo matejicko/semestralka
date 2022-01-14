@@ -11,7 +11,7 @@ if (isset($data['recipes']) && count($data['recipes']) > 0 &&
         $id = $recipe->getId();
         $c_id = $recipe->getCountryId()?>
 
-    <div class="row">
+    <div id="recipe_block_<?=$id?>" class="row">
         <div class="col-sm-2"></div>
 
         <div class="col-sm-8 block">
@@ -33,11 +33,12 @@ if (isset($data['recipes']) && count($data['recipes']) > 0 &&
                     <hr/>
                     <a class="btn" href="?c=recipes&a=showRecipe&id=<?=$id?>">Otvoriť</a>
                     <a class="btn btn-success" href="?c=account&a=showMyRecipes">Upraviť</a>
-                    <a id="fake_button" class="btn btn-danger"
-                       onclick="deleteAlertSwal('Naozaj si praješ odstrániť tento recept?', 'Operácia sa nedá zvrátiť', <?=$id?>)">Odstrániť</a>
 
-                    <a id="delete_button_<?=$id?>" class="btn btn-danger"
-                       href="?c=recipes&a=deleteRecipe&which=<?=$id?>" style="visibility: hidden"></a>
+                    <a id="fake_button" class="btn btn-danger"
+                       onclick="deleteRecipe('Naozaj si praješ odstrániť tento recept?', 'Operácia sa nedá zvrátiť', <?=$id?>)">Odstrániť</a>
+
+<!--                    <button id="delete_button_--><?//=$id?><!--" class="btn btn-danger"></button>-->
+
 
                 </div>
             </div>
@@ -65,3 +66,5 @@ if (isset($data['recipes']) && count($data['recipes']) > 0 &&
         <div class="col-sm-2"></div>
 </div>
 <?php }?>
+
+<script src="public/scripts/deleteAlert.js"></script>

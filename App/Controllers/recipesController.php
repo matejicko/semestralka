@@ -49,18 +49,19 @@ class recipesController extends \App\Controllers\AControllerRedirect
                 [ 'success_message' => 'Recept bol úspešne pridaný']);
         }else{
             $this->redirect('recipes', 'addRecipeForm',
-                ['error' => 'Recept sa nepodarilo pridať. Skontroluj všetky vstupy...']);
+                ['error' => 'Recept sa nepodarilo pridať. Skontroluj správnosť všetkých vstupov...']);
         }
     }
 
     public function deleteRecipe()
     {
         if(Deleter::deleteRecipe(intval($this->request()->getValue('which')))){
-            $this->redirect('home', 'index',
-                [ 'success_message' => 'Recept bol úspešne vymazaný']
-            );
+//            $this->redirect('home', 'index',
+//                [ 'success_message' => 'Recept bol úspešne vymazaný']
+//            );
+            return $this->json('true');
         }else{
-
+            return $this->json('false');
         }
     }
 

@@ -14,7 +14,7 @@ function deleteAlertSwal(titleString, textString) {
         });
 }
 
-function deleteAlertSwal(titleString, textString, id) {
+function deleteRecipe(titleString, textString, id) {
     let deleteButton = document.getElementById('delete_button_' + id);
 
     swal({
@@ -24,9 +24,38 @@ function deleteAlertSwal(titleString, textString, id) {
         buttons: true,
         dangerMode: true,
     }).then((confirmation) => {
+
         if (confirmation) {
-            deleteButton.click();
+            let via = '?c=recipes&a=deleteRecipe&which=' + id;
+
+            fetch(via)
+                .then(response => response.json())
+                .then(data => {
+                    if (data === 'false') {
+                        swal({
+                            title: "Chyba",
+                            text: "Nepodarilo sa vymazať recept",
+                            icon: "warning",
+                            buttons: true,
+                            dangerMode: true,
+                        });
+                    } else {
+                        swal({
+                            title: "Recept bol úspešne vymazaný",
+                            icon: "success",
+                            button: "OK"
+                        });
+
+                        document.getElementById('recipe_block_' + id).remove();
+                    }
+                });
         }
+
+        // if (confirmation) {
+        //     deleteButton.click();
+        //
+        //
+        // }
     });
 }
 

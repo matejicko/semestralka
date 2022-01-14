@@ -16,7 +16,6 @@ class list_of_ingredients extends Model
 
     }
 
-
     static public function setDbColumns()
     {
         return ['recipe_id', 'ingredient_id', 'unit_id', 'quantity'];

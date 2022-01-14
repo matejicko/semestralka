@@ -70,19 +70,28 @@ class Authentification
             FormatChecker::checkPassword($password) &&
             strcmp($password, $checkPassword) == 0) { //confirmation password must fit password
 
-            //check if there is already user with such username or mail
-            $checkUser = user::getAll('username = ? OR mail = ?', [$username, $mail]);
-
-            if (isset($_FILES['photo'])) {
-                if ($_FILES["photo"]["error"] == UPLOAD_ERR_OK) {
-                    $nameImg =  $username . "_PROFILE_" . $_FILES['photo']['name'];
-                    $via = Configuration::UPLOAD_DIR_PROFILE_PHOTO . "$nameImg";
-                    move_uploaded_file($_FILES['photo']['tmp_name'], $via);
+            $id = 0;
+            try{
+                //check if there is already user with such username or mail
+                $checkUser = user::getAll('username = ? OR mail = ?', [$username, $mail]);
+                $allUsers = user::getAll();
+                if (isset($allUsers)){
+                    $id = $allUsers[count($allUsers) - 1]->getId();
                 }
+            }catch(\Exception){
+                return false;
             }
 
             //if there is nobody with same username or mail, new account can be created
             if ($checkUser == null) {
+
+                if (isset($_FILES['photo'])) {
+                    if ($_FILES["photo"]["error"] == UPLOAD_ERR_OK) {
+                        $nameImg =  $username . "_PROFILE_" . $id . "_" . $_FILES['photo']['name'];
+                        $via = Configuration::UPLOAD_DIR_PROFILE_PHOTO . "$nameImg";
+                        move_uploaded_file($_FILES['photo']['tmp_name'], $via);
+                    }
+                }
 
                 $newUser = new user(username: $username,
                     name: $name,

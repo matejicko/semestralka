@@ -3,6 +3,7 @@
 namespace App\Core;
 
 use App\Core\DB\Connection;
+use App\Models\list_of_ingredients;
 use PDOException;
 
 /**
@@ -157,6 +158,29 @@ abstract class Model implements \JsonSerializable
             $sql = "DELETE FROM " . self::getTableName() . " WHERE id=?";
             $stmt = self::$connection->prepare($sql);
             $stmt->execute([$this->{self::$pkColumn}]);
+            if ($stmt->rowCount() == 0) {
+                throw new \Exception('Model not found!');
+            }
+        } catch (PDOException $e) {
+            throw new \Exception('Query failed: ' . $e->getMessage());
+        }
+    }
+
+    /** @var list_of_ingredients $list_of_ingredients  */
+    public function deleteListOfIngredients(list_of_ingredients $list_of_ingredients)
+    {
+        self::connect();
+
+        try {
+            $sql = "DELETE FROM " . $list_of_ingredients->getTableName() . " WHERE recipe_id = ? AND " .
+            " ingredient_id = ? AND unit_id = ? AND quantity = ?";
+
+            $stmt = self::$connection->prepare($sql);
+            $stmt->execute([$list_of_ingredients->getRecipeId(),
+                $list_of_ingredients->getIngredientId(),
+                $list_of_ingredients->getUnitId(),
+                $list_of_ingredients->getQuantity()]);
+
             if ($stmt->rowCount() == 0) {
                 throw new \Exception('Model not found!');
             }

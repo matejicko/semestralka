@@ -27,8 +27,14 @@ class Deleter
                 }
             }
 
-            //after that, user deletion
-            $user->delete();
+            try{
+                //after that, user deletion
+                $user->delete();
+                unlink($user->getPhoto()); //profile picture has to be removed as well
+            }catch(\Exception){
+                return false;
+            }
+
             return true;
         }else{
             //it is impossible to delete non-existing user
@@ -48,8 +54,14 @@ class Deleter
             //all connections between recipe and its ingredients has to be deleted first
             self::deleteIngredientsAssociatedToRecipe($recipe_id);
 
-            //after that, recipe deletion is performed
-            $recipe->delete();
+            try{
+                //after that, recipe deletion is performed
+                $recipe->delete();
+                unlink($recipe->getImage()); //recipe picture has to be deleted
+            }catch(\Exception){
+                return false;
+            }
+
             return true;
         }else{
             return false;
@@ -64,7 +76,7 @@ class Deleter
 
         if (isset($associations)){
             foreach ($associations as $association){
-                $association->delete();
+                $association->deleteListOfIngredients($association);
             }
         }
     }

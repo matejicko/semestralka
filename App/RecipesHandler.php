@@ -87,7 +87,6 @@ class RecipesHandler
         $duration_unit = $request->getValue('duration_unit');
         $portion = $request->getValue('portion');
 
-        $aaa = floatval($duration_value);
 
         //Third segment of form - ingredients
         $i = 0;
@@ -107,6 +106,7 @@ class RecipesHandler
             $i++;
         }
 
+
         //Fourth segment of form - process
         $process = $request->getValue('process');
 
@@ -123,9 +123,22 @@ class RecipesHandler
 
         $recipe->setTitle($title);
 
+        $recipeId = 0;
+        try{ //try to find ID for recipe, that will be added
+            $recipes = recipe::getAll();
+            if (isset($recipes)){
+                $recipeId = $recipes[count($recipes) - 1]->getId() + 1;
+            }else{
+                $recipeId = 1;
+            }
+        }catch(\Exception){
+
+        }
+
+
         if (isset($picture)) {
             if ($picture["error"] == UPLOAD_ERR_OK) {
-                $nameImg =  $title . "_RECIPE_" . $picture['name'];
+                $nameImg =  $title . "_RECIPE_" . $recipeId . "_" . $picture['name'];
                 $via = Configuration::UPLOAD_DIR_RECIPE_PHOTO . "$nameImg";
                 move_uploaded_file($picture['tmp_name'], $via);
 
@@ -197,14 +210,7 @@ class RecipesHandler
         //now when whole input is controlled, we can save recipe and transfer it to the database
         $recipeId = 0;
         try{
-            $recipes = recipe::getAll();
-            if (isset($recipes)){
-                $recipeId = $recipes[count($recipes) - 1]->getId() + 1;
-            }else{
-                $recipeId = 1;
-            }
 
-            //$recipe->setId($recipeId);
             $recipe->save();
         }catch(\Exception){
             return false;
@@ -229,6 +235,10 @@ class RecipesHandler
                     }
 
                 }catch(\Exception){
+                    try{
+                        $recipe->delete(); //try to delete yet saved recipe
+                    }catch(\Exception){
+                    }
                     return false;
                 }
             }

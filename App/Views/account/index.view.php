@@ -19,9 +19,9 @@
                 <a class="btn" href="?c=account&a=showMyRecipes">Moje recepty</a>
 
                 <a id="fake_button" class="btn btn-danger" href="#"
-                   onclick="deleteAlertSwal('Naozaj si praješ odstrániť účet?', 'Táto akcia sa nedá zvrátiť', 1)">Odstrániť účet</a>
+                   onclick="deleteAlertSwal('Naozaj si praješ odstrániť účet?', 'Táto akcia sa nedá zvrátiť')">Odstrániť účet</a>
 
-                <a id="delete_button_1" href="?c=account&a=deleteAccount"></a>
+                <a id="delete_button" href="?c=account&a=deleteAccount"></a>
             </div>
         <?php }?>
     </div>
