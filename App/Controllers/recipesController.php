@@ -65,6 +65,21 @@ class recipesController extends \App\Controllers\AControllerRedirect
         }
     }
 
+    public function editRecipeForm()
+    {
+        $ingredientsNames = RecipesHandler::getAllIngredientsNames();
+        $unitShortcuts = RecipesHandler::getAllUnitsShortcuts();
+        $countriesNames = RecipesHandler::getAllCountriesNames();
+
+        $recipe = recipe::getOne($this->request()->getValue('id'));
+
+        return $this->html(
+            ['recipe' => $recipe,
+                'ingredientsList' => $ingredientsNames,
+                'unitsList' => $unitShortcuts,
+                'countriesList' => $countriesNames]);
+    }
+
     public function editRecipe()
     {
         return $this->html();
@@ -95,4 +110,72 @@ class recipesController extends \App\Controllers\AControllerRedirect
         }
 
     }
+
+    public function changeTitle(): \App\Core\Responses\JsonResponse{
+        try{
+            $newTitle = $this->request()->getValue('title');
+            $recipe = recipe::getOne($this->request()->getValue('id'));
+
+            if (isset($recipe)){
+                if (RecipesHandler::changeTitleToRecipe($recipe, $newTitle, true)){
+                    return $this->json('true');
+                }
+            }
+        }catch(\Exception){
+        }
+
+        return $this->json('false');
+    }
+
+    public function changeCountry(): \App\Core\Responses\JsonResponse{
+        try{
+            $newCountry = $this->request()->getValue('country');
+            $recipe = recipe::getOne($this->request()->getValue('id'));
+
+            if (isset($recipe)){
+                if (RecipesHandler::changeCountryToRecipe($recipe, $newCountry, true)){
+                    return $this->json('true');
+                }
+            }
+        }catch(\Exception){
+        }
+
+        return $this->json('false');
+    }
+
+    public function changeDuration(): \App\Core\Responses\JsonResponse{
+        try{
+            $newValue = $this->request()->getValue('value');
+            $newUnit = $this->request()->getValue('unit');
+            $recipe = recipe::getOne($this->request()->getValue('id'));
+
+            if (isset($recipe)){
+                if (RecipesHandler::changeDurationToRecipe($recipe, $newValue, $newUnit, true)){
+                    return $this->json('true');
+                }
+            }
+        }catch(\Exception){
+        }
+
+        return $this->json('false');
+    }
+
+    public function changePortions(): \App\Core\Responses\JsonResponse
+    {
+        try{
+            $newPortions = $this->request()->getValue('portions');
+            $recipe = recipe::getOne($this->request()->getValue('id'));
+
+            if (isset($recipe)){
+                if (RecipesHandler::changePortionsToRecipe($recipe, $newPortions, true)){
+                    return $this->json('true');
+                }
+            }
+        }catch(\Exception){
+        }
+
+        return $this->json('false');
+    }
+
+
 }

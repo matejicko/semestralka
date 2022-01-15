@@ -117,11 +117,14 @@ class RecipesHandler
         $recipe = new recipe();
 
         //title is mandatory, has to be maximum 64 chars long and <script> mark is forbidden
-        if (!FormatChecker::checkPlainText($title) || strlen($title) > 64){
+        if (!self::changeTitleToRecipe($recipe, $title, false)){
             return false;
         }
-
-        $recipe->setTitle($title);
+//        if (!FormatChecker::checkPlainText($title) || strlen($title) > 64){
+//            return false;
+//        }
+//
+//        $recipe->setTitle($title);
 
         $recipeId = 0;
         try{ //try to find ID for recipe, that will be added
@@ -132,9 +135,7 @@ class RecipesHandler
                 $recipeId = 1;
             }
         }catch(\Exception){
-
         }
-
 
         if (isset($picture)) {
             if ($picture["error"] == UPLOAD_ERR_OK) {
@@ -147,33 +148,42 @@ class RecipesHandler
         }
 
         //controls if country exists in DB
-        $countryCheck = country::getAll('name = ?', [$country]);
-        if (!isset($countryCheck[0])){
+        if (!self::changeCountryToRecipe($recipe, $country, false)){
             return false;
         }
-
-        $recipe->setCountryId($countryCheck[0]->getId());
+//        $countryCheck = country::getAll('name = ?', [$country]);
+//        if (!isset($countryCheck[0])){
+//            return false;
+//        }
+//
+//        $recipe->setCountryId($countryCheck[0]->getId());
 
         //duration format control
-        if (FormatChecker::checkNonNullityAndNonEmptiness($duration_value) &&
-            FormatChecker::checkNonNullityAndNonEmptiness($duration_unit)){
-
-            if (floatval($duration_value) > 0){
-                $duration = $duration_value . " " . $duration_unit;
-                $recipe->setDuration($duration);
-            }else{
-                return false; //duration has to be positive number
-            }
+        if (!self::changeDurationToRecipe($recipe, $duration_value, $duration_unit, false)){
+            return false;
         }
+//        if (FormatChecker::checkNonNullityAndNonEmptiness($duration_value) &&
+//            FormatChecker::checkNonNullityAndNonEmptiness($duration_unit)){
+//
+//            if (floatval($duration_value) > 0){
+//                $duration = $duration_value . " " . $duration_unit;
+//                $recipe->setDuration($duration);
+//            }else{
+//                return false; //duration has to be positive number
+//            }
+//        }
 
         //portions control
-        if (FormatChecker::checkNonNullityAndNonEmptiness($portion)){
-            if (intval($portion) > 0){
-                $recipe->setPortions(intval($portion));
-            }else{
-                return false; //number of portions has to be positive number
-            }
+        if (!self::changePortionsToRecipe($recipe, $portion, false)){
+            return false;
         }
+//        if (FormatChecker::checkNonNullityAndNonEmptiness($portion)){
+//            if (intval($portion) > 0){
+//                $recipe->setPortions(intval($portion));
+//            }else{
+//                return false; //number of portions has to be positive number
+//            }
+//        }
 
         //process field is mandatory
         if (!FormatChecker::checkPlainText($process)){
@@ -210,7 +220,6 @@ class RecipesHandler
         //now when whole input is controlled, we can save recipe and transfer it to the database
         $recipeId = 0;
         try{
-
             $recipe->save();
         }catch(\Exception){
             return false;
@@ -338,5 +347,92 @@ class RecipesHandler
         }
 
         return $output;
+    }
+
+    public static function changeTitleToRecipe(recipe $recipe, mixed $newTitle, bool $sendToDB)
+    {
+        if (!FormatChecker::checkPlainText($newTitle) || strlen($newTitle) > 64){
+            return false;
+        }else{
+            $recipe->setTitle($newTitle);
+
+            if ($sendToDB){
+                try{
+                    $recipe->save();
+                }catch(\Exception){
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public static function changeDurationToRecipe(recipe $recipe, mixed $newValue, mixed $newUnit, bool $sendToDB)
+    {
+        if (FormatChecker::checkNonNullityAndNonEmptiness($newValue) &&
+            FormatChecker::checkPlainText($newUnit)){
+
+            if (floatval($newValue) > 0){
+                $duration = $newValue . " " . $newUnit;
+                $recipe->setDuration($duration);
+
+                if ($sendToDB){
+                    try{
+                        $recipe->save();
+                    }catch(\Exception){
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static function changePortionsToRecipe(recipe $recipe, mixed $newPortions, bool $sendToDB)
+    {
+        if (FormatChecker::checkNonNullityAndNonEmptiness($newPortions)){
+            if (intval($newPortions) > 0){
+                $recipe->setPortions(intval($newPortions));
+
+                if ($sendToDB){
+                    try{
+                        $recipe->save();
+                    }catch(\Exception){
+                        return false;
+                    }
+                }
+
+                return true;
+            }else{
+                return false; //number of portions has to be positive number
+            }
+        }
+    }
+
+    public static function changeCountryToRecipe(recipe $recipe, mixed $newCountry, bool $sendToDB)
+    {
+        try{
+            $countryCheck = country::getAll('name = ?', [$newCountry]);
+
+            if (!isset($countryCheck[0])){
+
+                return false;
+
+            }else{
+                $recipe->setCountryId($countryCheck[0]->getId());
+
+                if ($sendToDB){
+                    $recipe->save();
+                }
+
+                return true;
+            }
+        }catch(\Exception){
+            return false;
+        }
+
     }
 }

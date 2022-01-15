@@ -32,7 +32,7 @@ if (isset($data['recipes']) && count($data['recipes']) > 0 &&
 
                     <hr/>
                     <a class="btn" href="?c=recipes&a=showRecipe&id=<?=$id?>">Otvoriť</a>
-                    <a class="btn btn-success" href="?c=account&a=showMyRecipes">Upraviť</a>
+                    <a class="btn btn-success" href="?c=recipes&a=editRecipeForm&id=<?=$id?>">Upraviť</a>
 
                     <a id="fake_button" class="btn btn-danger"
                        onclick="deleteRecipe('Naozaj si praješ odstrániť tento recept?', 'Operácia sa nedá zvrátiť', <?=$id?>)">Odstrániť</a>
