@@ -8,74 +8,116 @@ use App\Models\ingredient;
 use App\Models\list_of_ingredients;
 use App\Models\recipe;
 use App\Models\unit;
+use Exception;
 
 class RecipesHandler
 {
-    public static function getRecipesForUser($user_id)
+    /**
+     * @throws Exception
+     */
+    public static function getRecipesForUser($user_id): array
     {
-        return recipe::getAll('user_id = ?', [$user_id]);
+        try{
+            return recipe::getAll('user_id = ?', [$user_id]);
+        }catch(Exception){
+            throw new Exception('Error while fetching from DB');
+        }
+
     }
 
-    public static function getAllIngredientsNames()
+    /**
+     * @throws Exception
+     */
+    public static function getAllIngredientsNames(): array
     {
-        $ingredients = ingredient::getAll();
-        $i = 0;
-        $names = [];
+        try{
+            $ingredients = ingredient::getAll();
+            $i = 0;
+            $names = [];
 
-        if ($ingredients != null) {
-            foreach ($ingredients as $ingredient) {
-                $names[$i] = $ingredient->getName();
-                $i++;
+            if ($ingredients != null) {
+                foreach ($ingredients as $ingredient) {
+                    $names[$i] = $ingredient->getName();
+                    $i++;
+                }
             }
+
+            return $names;
+        }catch(Exception){
+            throw new Exception('Error while fetching from DB');
         }
 
-        return $names;
     }
 
-    public static function getAllUnitsShortcuts()
+    /**
+     * @throws Exception
+     */
+    public static function getAllUnitsShortcuts(): array
     {
-        $units = unit::getAll();
-        $i = 0;
-        $shortcuts = [];
+        try{
+            $units = unit::getAll();
+            $i = 0;
+            $shortcuts = [];
 
-        if ($units != null) {
-            foreach ($units as $unit) {
-                $shortcuts[$i] = $unit->getShortcut();
-                $i++;
+            if ($units != null) {
+                foreach ($units as $unit) {
+                    $shortcuts[$i] = $unit->getShortcut();
+                    $i++;
+                }
             }
+
+            return $shortcuts;
+        }catch(Exception){
+            throw new Exception('Error while fetching from DB');
         }
 
-        return $shortcuts;
     }
 
-    public static function getAllCountriesNames()
+    /**
+     * @throws Exception
+     */
+    public static function getAllCountriesNames(): array
     {
-        $countries = country::getAll();
-        $i = 0;
-        $names = [];
+        try{
+            $countries = country::getAll();
+            $i = 0;
+            $names = [];
 
-        if ($countries != null) {
-            foreach ($countries as $country) {
-                $names[$i] = $country->getName();
-                $i++;
+            if ($countries != null) {
+                foreach ($countries as $country) {
+                    $names[$i] = $country->getName();
+                    $i++;
+                }
             }
+
+            return $names;
+        }catch(Exception){
+            throw new Exception('Error while fetching from DB');
         }
 
-        return $names;
     }
 
-    public static function getCountriesForRecipesAsMap(array $recipes)
+    /**
+     * @throws Exception
+     */
+    public static function getCountriesForRecipesAsMap(array $recipes): array
     {
-        $mapOfCountries = [];
+        try{
+            $mapOfCountries = [];
 
-        foreach ($recipes as $recipe) {
-            $mapOfCountries[$recipe->getCountryId()] = country::getOne($recipe->getCountryId());
+            foreach ($recipes as $recipe) {
+                $mapOfCountries[$recipe->getCountryId()] = country::getOne($recipe->getCountryId());
+            }
+
+            return $mapOfCountries;
+
+        }catch(Exception){
+            throw new Exception('Error while fetching from DB');
         }
 
-        return $mapOfCountries;
     }
 
-    public static function addRecipe(Core\Request $request, $picture)
+    public static function addRecipe(Core\Request $request, $picture): bool
     {
         //----------------------------------FETCHING INPUT FROM REQUEST----------------------------------
         //First segment of form - title and photo
@@ -122,7 +164,6 @@ class RecipesHandler
         }
 
         //recipe image input control
-        $recipeId = 0;
         try{ //try to find ID for recipe, that will be added
             $recipes = recipe::getAll();
             if (isset($recipes)){
@@ -130,7 +171,7 @@ class RecipesHandler
             }else{
                 $recipeId = 1;
             }
-        }catch(\Exception){
+        }catch(Exception){
             return false;
         }
 
@@ -183,18 +224,22 @@ class RecipesHandler
         }
 
         //to add recipe, some user has to be logged in
-        $loggedUser = AccountHandler::getLoggedUser();
-        if ($loggedUser == null){
+        try{
+            $loggedUser = AccountHandler::getLoggedUser();
+            if ($loggedUser == null){
+                return false;
+            }else{
+                $recipe->setUserId($loggedUser->getId());
+            }
+        }catch(Exception){
             return false;
-        }else{
-            $recipe->setUserId($loggedUser->getId());
         }
 
         //----------------------------------FINALIZATION----------------------------------
         //now when whole input is controlled, we can save recipe and transfer it to the database
         try{
             $recipe->save();
-        }catch(\Exception){
+        }catch(Exception){
             return false;
         }
 
@@ -216,10 +261,10 @@ class RecipesHandler
                         $association->save();
                     }
 
-                }catch(\Exception){
+                }catch(Exception){
                     try{
                         $recipe->delete(); //try to delete yet saved recipe
-                    }catch(\Exception){
+                    }catch(Exception){
                     }
                     return false;
                 }
@@ -235,9 +280,9 @@ class RecipesHandler
      * @param array $ingredient_value - list of ingredients quantities
      * @param array $ingredient_unit - list of ingredients units
      * @param array $ingredient - list of ingredients names
-     * @return false|true - return whether ingredients input is correct or not
+     * @return bool - return whether ingredients input is correct or not
      */
-    private static function controlIngredientsInput(array $ingredient_value, array $ingredient_unit, array $ingredient)
+    private static function controlIngredientsInput(array $ingredient_value, array $ingredient_unit, array $ingredient): bool
     {
 
         for ($i = 0; $i < count($ingredient) - 1; $i++) {
@@ -250,13 +295,13 @@ class RecipesHandler
                     if ($ingredient[$i] != null && $ingredient_unit[$i] != null) {
                         try {
                             $ing = ingredient::getAll('name = ?', [$ingredient[$i]]);
-                        } catch (\Exception) {
+                        } catch (Exception) {
                             return false; //in case some error occurs while fetching data from database
                         }
 
                         try {
                             $unit = unit::getAll('shortcut = ?', [$ingredient_unit[$i]]);
-                        } catch (\Exception) {
+                        } catch (Exception) {
                             return false; //in case some error occurs while fetching data from database
                         }
 
@@ -268,7 +313,7 @@ class RecipesHandler
                                 $new_ingredient = new ingredient(name: $ingredient[$i]);
                                 try {
                                     $new_ingredient->save();
-                                } catch (\Exception) {
+                                } catch (Exception) {
                                     return false; //in case some error occurs during sending data to database
                                 }
                             }
@@ -290,39 +335,47 @@ class RecipesHandler
         return true;
     }
 
-    public static function getIngredientsListInRecipe(int $id)
+    /**
+     * @throws Exception
+     */
+    public static function getIngredientsListInRecipe(int $id): string
     {
-        $rows = list_of_ingredients::getAll('recipe_id = ?', [$id]);
-        $output = "";
+        try{
+            $rows = list_of_ingredients::getAll('recipe_id = ?', [$id]);
+            $output = "";
 
-        foreach ($rows as $row){
-            $ingredientQuantity = $row->getQuantity();
+            foreach ($rows as $row){
+                $ingredientQuantity = $row->getQuantity();
 
-            $ingredient = ingredient::getOne($row->getIngredientId());
-            $ingredientName = $ingredient->getName();
+                $ingredient = ingredient::getOne($row->getIngredientId());
+                $ingredientName = $ingredient->getName();
 
-            //in case that no unit is used
-            if ($row->getUnitId() == 1){
-                if ($ingredientQuantity == 0 || $ingredientQuantity == 1){
-                    $output = $output . "&#9-&#9" . $ingredientName ."<br>";
+                //in case that no unit is used
+                if ($row->getUnitId() == 1){
+                    if ($ingredientQuantity == 0 || $ingredientQuantity == 1){
+                        $output = $output . "&#9-&#9" . $ingredientName ."<br>";
+                    }else{
+                        $output = $output . "&#9-&#9<b>" . $ingredientQuantity .
+                            "</b>&#9" . $ingredientName . "<br>";
+                    }
                 }else{
-                    $output = $output . "&#9-&#9<b>" . $ingredientQuantity .
-                         "</b>&#9" . $ingredientName . "<br>";
-                }
-            }else{
-                $ingredientUnit = unit::getOne($row->getUnitId());
-                $ingredientUnitName = $ingredientUnit->getShortcut();
+                    $ingredientUnit = unit::getOne($row->getUnitId());
+                    $ingredientUnitName = $ingredientUnit->getShortcut();
 
-                $output = $output . "&#9-&#9<b>" . $ingredientQuantity . " " .
-                    $ingredientUnitName . "</b>&#9" . $ingredientName ."<br>";
+                    $output = $output . "&#9-&#9<b>" . $ingredientQuantity . " " .
+                        $ingredientUnitName . "</b>&#9" . $ingredientName ."<br>";
+                }
+
             }
 
+            return $output;
+        }catch(Exception){
+            throw new Exception('Error while fetching from DB');
         }
 
-        return $output;
     }
 
-    public static function changeTitleToRecipe(recipe $recipe, mixed $newTitle, bool $sendToDB)
+    public static function changeTitleToRecipe(recipe $recipe, mixed $newTitle, bool $sendToDB): bool
     {
         if (!FormatChecker::checkPlainText($newTitle) || strlen($newTitle) > 64){
             return false;
@@ -332,7 +385,7 @@ class RecipesHandler
             if ($sendToDB){
                 try{
                     $recipe->save();
-                }catch(\Exception){
+                }catch(Exception){
                     return false;
                 }
             }
@@ -341,7 +394,7 @@ class RecipesHandler
         return true;
     }
 
-    public static function changeDurationToRecipe(recipe $recipe, mixed $newValue, mixed $newUnit, bool $sendToDB)
+    public static function changeDurationToRecipe(recipe $recipe, mixed $newValue, mixed $newUnit, bool $sendToDB): bool
     {
         if (FormatChecker::checkNonNullityAndNonEmptiness($newValue) &&
             FormatChecker::checkPlainText($newUnit)){
@@ -353,7 +406,7 @@ class RecipesHandler
                 if ($sendToDB){
                     try{
                         $recipe->save();
-                    }catch(\Exception){
+                    }catch(Exception){
                         return false;
                     }
                 }
@@ -364,7 +417,7 @@ class RecipesHandler
         return false;
     }
 
-    public static function changePortionsToRecipe(recipe $recipe, mixed $newPortions, bool $sendToDB)
+    public static function changePortionsToRecipe(recipe $recipe, mixed $newPortions, bool $sendToDB): bool
     {
         if (FormatChecker::checkNonNullityAndNonEmptiness($newPortions)){
             if (intval($newPortions) > 0){
@@ -373,7 +426,7 @@ class RecipesHandler
                 if ($sendToDB){
                     try{
                         $recipe->save();
-                    }catch(\Exception){
+                    }catch(Exception){
                         return false;
                     }
                 }
@@ -387,7 +440,7 @@ class RecipesHandler
         return false;
     }
 
-    public static function changeCountryToRecipe(recipe $recipe, mixed $newCountry, bool $sendToDB)
+    public static function changeCountryToRecipe(recipe $recipe, mixed $newCountry, bool $sendToDB): bool
     {
         try{
             $countryCheck = country::getAll('name = ?', [$newCountry]);
@@ -405,13 +458,13 @@ class RecipesHandler
 
                 return true;
             }
-        }catch(\Exception){
+        }catch(Exception){
             return false;
         }
 
     }
 
-    public static function changeProcessToRecipe(recipe $recipe, mixed $newProcess, bool $sendToDB)
+    public static function changeProcessToRecipe(recipe $recipe, mixed $newProcess, bool $sendToDB): bool
     {
         if (!FormatChecker::checkPlainText($newProcess)){
             return false;
@@ -421,7 +474,7 @@ class RecipesHandler
             if ($sendToDB){
                 try{
                     $recipe->save();
-                }catch(\Exception){
+                }catch(Exception){
                     return false;
                 }
             }
@@ -431,7 +484,7 @@ class RecipesHandler
 
     }
 
-    public static function changeAboutToRecipe(recipe $recipe, mixed $newAbout, bool $sendToDB)
+    public static function changeAboutToRecipe(recipe $recipe, mixed $newAbout, bool $sendToDB): bool
     {
         if (FormatChecker::checkPlainText($newAbout)){
             $recipe->setAbout($newAbout);
@@ -439,7 +492,7 @@ class RecipesHandler
             if ($sendToDB){
                 try{
                     $recipe->save();
-                }catch(\Exception){
+                }catch(Exception){
                     return false;
                 }
             }

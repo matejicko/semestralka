@@ -4,33 +4,38 @@ namespace App;
 
 use App\Config\Configuration;
 use App\Models\user;
+use Exception;
 
 class AccountHandler
 {
-    public static function getLoggedUser()
+    /**
+     * @throws Exception
+     */
+    public static function getLoggedUser(): ?user
     {
-        $users = user::getAll('mail = ?', [$_SESSION['name']]);
-        if ($users != null){
-            return $users[0];
-        }else{
-            return null;
+        try{
+            $users = user::getAll('mail = ?', [$_SESSION['name']]);
+            if ($users != null){
+                return $users[0];
+            }else{
+                return null;
+            }
+        }catch(Exception){
+            throw new Exception('Error while fetching from DB');
         }
+
     }
 
-    public static function deleteAccount()
+    /**
+     * @throws Exception
+     */
+    public static function editAccount(Core\Request $request): bool
     {
-        $user = self::getLoggedUser();
-        if ($user != null){
-            //all recipes belonging to such account has to be deleted at first
-            //it means that all recipe-ingredient connections has to be removed from list_of_ingredients
-        }else{
+        try{
+            $loggedUser = self::getLoggedUser();
+        }catch(Exception){
             return false;
         }
-    }
-
-    public static function editAccount(Core\Request $request)
-    {
-        $loggedUser = self::getLoggedUser();
 
         $newUsername = $request->getValue('username');
         $newName = $request->getValue('name');
@@ -42,7 +47,11 @@ class AccountHandler
 
         $password = $request->getValue('password');
 
-        $checkUsers = user::getAll('id <> ? AND (username = ? OR mail = ?)', [$loggedUser->getId(), $newUsername, $newMail]);
+        try{
+            $checkUsers = user::getAll('id <> ? AND (username = ? OR mail = ?)', [$loggedUser->getId(), $newUsername, $newMail]);
+        }catch(Exception){
+            return false;
+        }
 
         //in case that DB contains user(s) with same name or mail (which are unique identificators)
         if ($checkUsers != null){
@@ -134,7 +143,12 @@ class AccountHandler
         }
 
         //at the end changes will be saved in DB
-        $loggedUser->save();
+        try{
+            $loggedUser->save();
+        }catch(Exception){
+            return false;
+        }
+
         return true;
 
     }

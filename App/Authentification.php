@@ -8,9 +8,8 @@ use mysql_xdevapi\Exception;
 
 class Authentification
 {
-    public static function verifyAndLogIn($email, $password)
+    public static function verifyAndLogIn($email, $password): bool
     {
-
         //input has to fit exact format
         if (FormatChecker::checkEmail($email) &&
             FormatChecker::checkPassword($password)) {
@@ -18,7 +17,7 @@ class Authentification
             //try to fetch user from DB
             try{
                 $user = user::getAll('mail = ?',  [$email]);
-            }catch(Exception){
+            }catch(\Exception){
                 return false;
             }
 
@@ -39,9 +38,11 @@ class Authentification
                 return false;
             }
         }
+
+        return false;
     }
 
-    public static function isLogged()
+    public static function isLogged(): bool
     {
         return isset($_SESSION['name']);
     }
@@ -52,7 +53,7 @@ class Authentification
         session_destroy();
     }
 
-    public static function register($request)
+    public static function register($request): bool
     {
         $username = $request->getValue('username');
         $name = $request->getValue('name');
@@ -85,6 +86,7 @@ class Authentification
             //if there is nobody with same username or mail, new account can be created
             if ($checkUser == null) {
 
+                $via = null;
                 if (isset($_FILES['photo'])) {
                     if ($_FILES["photo"]["error"] == UPLOAD_ERR_OK) {
                         $nameImg =  $username . "_PROFILE_" . $id . "_" . $_FILES['photo']['name'];
@@ -116,26 +118,37 @@ class Authentification
 
     }
 
-    public static function isUniqueUsername(mixed $username)
+    public static function isUniqueUsername(mixed $username): bool
     {
-        $user = user::getAll('username = ?', [$username]);
+        try{
+            $user = user::getAll('username = ?', [$username]);
 
-        if (isset($user[0])){
-            return false;
-        }else{
-            return true;
+            if (isset($user[0])){
+                return false;
+            }else{
+                return true;
+            }
+        }catch(\Exception){
+            throw new Exception('Error while fetching from DB');
         }
-
     }
 
-    public static function isUniqueMail(mixed $mail)
+    /**
+     * @throws \Exception
+     */
+    public static function isUniqueMail(mixed $mail): bool
     {
-        $user = user::getAll('mail = ?', [$mail]);
+        try{
+            $user = user::getAll('mail = ?', [$mail]);
 
-        if (isset($user[0])){
-            return false;
-        }else{
-            return true;
+            if (isset($user[0])){
+                return false;
+            }else{
+                return true;
+            }
+        }catch(\Exception){
+            throw new \Exception('Error while fetching from DB');
         }
+
     }
 }

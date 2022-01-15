@@ -2,12 +2,14 @@
 
 namespace App;
 
+use JetBrains\PhpStorm\Pure;
+
 class FormatChecker
 {
     /*Check if username passes non-nullity, not-emptiness and proper format
      *
      */
-    public static function checkUsername($username)
+    public static function checkUsername($username): bool
     {
         //username guidance:  - alphanumerical chars + '.' and '_'
         //                    - has to be 3 to 20 characters long
@@ -21,7 +23,7 @@ class FormatChecker
     /*Check if name passes non-nullity, not-emptiness and proper format
      *
      */
-    public static function checkName($name)
+    public static function checkName($name): bool
     {
         //name guidance:    - has to start with capital
         //                  - special symbols allowed: '.' and '-'
@@ -34,7 +36,7 @@ class FormatChecker
     /*Check if surname passes non-nullity, not-emptiness and proper format
      *
      */
-    public static function checkSurname($surname)
+    public static function checkSurname($surname): bool
     {
         //surname guidance: - has to start with capital
         //                  - special symbols allowed: '.' and '-'
@@ -45,7 +47,7 @@ class FormatChecker
     /*Check if e-mail passes non-nullity, not-emptiness and proper format
      *
      */
-    public static function checkEmail($email)
+    public static function checkEmail($email): bool
     {
         //e-mail guidance:  - pre-defined format by php
 
@@ -56,7 +58,7 @@ class FormatChecker
     /*Check if password passes non-nullity, not-emptiness and proper format
      *
      */
-    public static function checkPassword($password)
+    public static function checkPassword($password): bool
     {
         //password guidance :   - has to be at least 6 character long
         //                      - no special symbols allowed
@@ -66,7 +68,7 @@ class FormatChecker
             preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,}$)/', $password));
     }
 
-    public static function checkSearchingBarInput($input)
+    public static function checkSearchingBarInput($input): bool
     {
         //searching bar input guidance:     - has to be at least 3 character long and maximum is 64
         //                                  - special symbols allowed: '.', '-' and ' '
@@ -75,12 +77,12 @@ class FormatChecker
             preg_match('/\b[A-ZÀ-ÿa-z0-9-. ]{3,64}$/', $input));
     }
 
-    public static function checkNonNullityAndNonEmptiness($input)
+    public static function checkNonNullityAndNonEmptiness($input): bool
     {
         return $input != null && $input != "";
     }
 
-    public static function checkPlainText($text)
+    public static function checkPlainText($text): bool
     {
         //plain text guidance: - is forbidden to contain <script>
 

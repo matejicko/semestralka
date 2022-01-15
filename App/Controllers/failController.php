@@ -12,16 +12,6 @@ class failController extends AControllerRedirect
      */
     public function index()
     {
-        return $this->html();
-    }
-
-    public function userData()
-    {
-        return $this->html();
-    }
-
-    public function permissionDenied()
-    {
-        return $this->html();
+        return $this->html(['error' => $this->request()->getValue('error')]);
     }
 }

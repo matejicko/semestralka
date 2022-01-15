@@ -67,6 +67,7 @@
                         aria-label="Default select example" required>
                     <option value="" disabled>Vyber jednotku:</option>
                     <option value="hodina">hodina</option>
+                    <option value="hodiny">hodiny</option>
                     <option value="hodín">hodín</option>
                     <option value="minúta">minúta</option>
                     <option value="minút">minút</option>

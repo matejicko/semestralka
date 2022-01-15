@@ -15,8 +15,6 @@ function deleteAlertSwal(titleString, textString) {
 }
 
 function deleteRecipe(titleString, textString, id) {
-    let deleteButton = document.getElementById('delete_button_' + id);
-
     swal({
         title: titleString,
         text: textString,
@@ -50,12 +48,6 @@ function deleteRecipe(titleString, textString, id) {
                     }
                 });
         }
-
-        // if (confirmation) {
-        //     deleteButton.click();
-        //
-        //
-        // }
     });
 }
 

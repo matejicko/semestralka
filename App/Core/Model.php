@@ -114,6 +114,7 @@ abstract class Model implements \JsonSerializable
     /**
      * Saves the current model to DB (if model id is set, updates it, else creates a new model)
      * @return mixed
+     * @throws \Exception
      */
     public function save()
     {
@@ -166,7 +167,9 @@ abstract class Model implements \JsonSerializable
         }
     }
 
-    /** @var list_of_ingredients $list_of_ingredients  */
+    /** @throws \Exception
+     * @var list_of_ingredients $list_of_ingredients
+     */
     public function deleteListOfIngredients(list_of_ingredients $list_of_ingredients)
     {
         self::connect();
@@ -200,7 +203,7 @@ abstract class Model implements \JsonSerializable
 
     /**
      * Default implementation of JSON serialize method
-     * @return array|mixed
+     * @return array
      */
     public function jsonSerialize()
     {

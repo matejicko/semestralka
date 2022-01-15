@@ -3,20 +3,22 @@
 namespace App\Controllers;
 
 use App\Authentification;
+use App\Core\Responses\JsonResponse;
 use App\Core\Responses\Response;
+use App\Core\Responses\ViewResponse;
 
-class authController extends \App\Controllers\AControllerRedirect
+class authController extends AControllerRedirect
 {
 
     /**
      * @inheritDoc
      */
-    public function index()
+    public function index(): ViewResponse|Response
     {
         return $this->html();
     }
 
-    public function loginForm()
+    public function loginForm(): ViewResponse
     {
         return $this->html(['error' => $this->request()->getValue('error')]);
     }
@@ -33,7 +35,6 @@ class authController extends \App\Controllers\AControllerRedirect
             $this->redirect('auth', 'loginForm',
                 [ 'error' => 'Zadal si nesprávne meno alebo heslo!']);
         }
-
     }
 
     public function logout()
@@ -57,25 +58,27 @@ class authController extends \App\Controllers\AControllerRedirect
 
     }
 
-    public function registrationForm()
+    public function registrationForm(): ViewResponse
     {
         return $this->html(['error' => $this->request()->getValue('error')]);
     }
 
-    public function isUniqueUsername(){
+    public function isUniqueUsername(): JsonResponse
+    {
         if (Authentification::isUniqueUsername($this->request()->getValue('username'))){
             return $this->json('true');
         }else{
             return $this->json('false');
-        };
+        }
     }
 
-    public function isUniqueMail(){
+    public function isUniqueMail(): JsonResponse
+    {
         if (Authentification::isUniqueMail($this->request()->getValue('mail'))){
             return $this->json('true');
         }else{
             return $this->json('false');
-        };
+        }
     }
 
 

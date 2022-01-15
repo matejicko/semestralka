@@ -28,6 +28,24 @@ h1, h2, h3, h4, h5, h6{
     font-weight: 600;
 }
 
+
+
+img{
+    background-position: center;
+}
+
+.img-fluid{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.row{
+    margin-left: 0;
+    margin-right: 0;
+}
+
+
 .caption-box{
     font-family: "Montserrat";
     font-weight: 600;
@@ -47,9 +65,11 @@ h1, h2, h3, h4, h5, h6{
 
 .block{
     border: 2px solid rgb(7, 21, 36);
+    /*box-shadow: 2px 2px 30px rgba(0, 0, 0, 0.2);*/
     border-radius: 20px;
     padding: 2%;
     margin-top: 2%;
+    /*transition: all .2s ease-in-out;*/
 }
 
 .navbar{
@@ -102,8 +122,21 @@ body{
 
 .vlajka{
     max-height: 32pt;
+    max-width: 48pt;
     border-radius: 5pt;
-    float: right;
+    float: top;
+    margin: 6pt;
+}
+
+.recipe-img-preview{
+    float: top;
+    max-width: content-box;
+}
+
+.recipe-img-wrapper{
+    float: left;
+    padding: 20px;
+    width: content-box;
 }
 
 .contact-menu{

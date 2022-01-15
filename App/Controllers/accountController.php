@@ -18,73 +18,106 @@ class accountController extends AControllerRedirect
      */
     public function index()
     {
-        $user = AccountHandler::getLoggedUser();
+        try{
+            $user = AccountHandler::getLoggedUser();
 
-        if ($user != null){
-            return $this->html([
-                'username' => $user->getUsername(),
-                'name' => $user->getName(),
-                'surname' => $user->getSurname(),
-                'mail' => $user->getMail(),
-                'photo' => $user->getPhoto()
-            ]);
-        }else{
-            $this->redirect('fail', 'userData');
+            if ($user != null){
+                return $this->html([
+                    'username' => $user->getUsername(),
+                    'name' => $user->getName(),
+                    'surname' => $user->getSurname(),
+                    'mail' => $user->getMail(),
+                    'photo' => $user->getPhoto()
+                ]);
+            }else{
+                $this->redirect('fail', 'index',
+                    ['error' => 'Na túto akciu musíš byť prihlásený!']);
+            }
+        }catch(\Exception){
+            $this->redirect('fail', 'index',
+                ['error' => 'Na túto akciu musíš byť prihlásený!']);
         }
+
     }
 
     public function deleteAccount(){
-        $user = AccountHandler::getLoggedUser();
+        try{
+            $user = AccountHandler::getLoggedUser();
 
-        if (isset($user)){
-            //najprv treba odhlasit uzivatela
-            Authentification::logOut();
+            if (isset($user)){
+                //firstly, logged user has to be logged out
+                Authentification::logOut();
 
-            if (Deleter::deleteUser($user->getId())){
-                $this->redirect('home', 'index',
-                    [ 'success_message' => 'Tvoj účet bol úspešne odstránený!']);
+                if (Deleter::deleteUser($user->getId())){
+                    $this->redirect('home', 'index',
+                        [ 'success_message' => 'Tvoj účet bol úspešne odstránený!']);
+                }else{
+                    $this->redirect('account');
+                }
             }else{
-                $this->redirect('account');
+                $this->redirect('fail', 'index',
+                    ['error' => 'Na túto akciu musíš byť prihlásený!']);
             }
-        }else{
-            $this->redirect('fail', 'permissionDenied');
+        }catch(\Exception){
+            $this->redirect('fail', 'index',
+                ['error' => 'Na túto akciu musíš byť prihlásený!']);
         }
+
     }
 
     public function settingsForm()
     {
-        $user = AccountHandler::getLoggedUser();
-        if ($user != null){
-            return $this->html([
-                'username' => $user->getUsername(),
-                'name' => $user->getName(),
-                'surname' => $user->getSurname(),
-                'mail' => $user->getMail(),
-                'photo' => $user->getPhoto(),
-                'error' => $this->request()->getValue('error')
-            ]);
-        }else{
-            $this->redirect('fail', 'userData');
+        try{
+            $user = AccountHandler::getLoggedUser();
+            if ($user != null){
+                return $this->html([
+                    'username' => $user->getUsername(),
+                    'name' => $user->getName(),
+                    'surname' => $user->getSurname(),
+                    'mail' => $user->getMail(),
+                    'photo' => $user->getPhoto(),
+                    'error' => $this->request()->getValue('error')
+                ]);
+            }else{
+                $this->redirect('fail', 'index',
+                    ['error' => 'Na túto akciu musíš byť prihlásený!']);
+            }
+        }catch(\Exception){
+            $this->redirect('fail', 'index',
+                ['error' => 'Na túto akciu musíš byť prihlásený!']);
         }
+
     }
 
     public function edit()
     {
-        if (AccountHandler::editAccount($this->request())){
-            $this->redirect('home', 'index',
-                [ 'success_message' => 'Zmeny boli úspešne nahraté!' ]);
-        }else{
-            $this->redirect('account', 'settingsForm',
-                [ 'error' => 'Nepodarilo sa nám zmeniť údaje na vašom profile. Pravdepodobne už evidujeme konto s vašou novou prezývkou alebo e-mailom...' ]);
+        try{
+            if (AccountHandler::editAccount($this->request())){
+                $this->redirect('home', 'index',
+                    [ 'success_message' => 'Zmeny boli úspešne nahraté!' ]);
+            }else{
+                $this->redirect('account', 'settingsForm',
+                    [ 'error' => 'Nepodarilo sa nám zmeniť údaje na vašom profile. Pravdepodobne už evidujeme konto s vašou novou prezývkou alebo e-mailom...' ]);
+            }
+        }catch(\Exception){
+            $this->redirect('fail', 'index',
+                ['error' => 'Nastala neočakávaná chyba :(']);
         }
+
     }
 
     public function showMyRecipes(){
-        $user = AccountHandler::getLoggedUser();
-        $recipes = RecipesHandler::getRecipesForUser($user->getId());
-        $countries = RecipesHandler::getCountriesForRecipesAsMap($recipes);
-        return $this->html(
-            [ 'recipes' => $recipes,
-                'countries' => $countries ]);
+        try{
+            $user = AccountHandler::getLoggedUser();
+            $recipes = RecipesHandler::getRecipesForUser($user->getId());
+            $countries = RecipesHandler::getCountriesForRecipesAsMap($recipes);
+            return $this->html(
+                [ 'recipes' => $recipes,
+                    'countries' => $countries ]);
+        }catch(\Exception){
+            $this->redirect('fail', 'index',
+                ['error' => 'Nastala neočakávaná chyba :(']);
+        }
+
     }
 }

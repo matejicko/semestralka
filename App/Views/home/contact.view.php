@@ -1,15 +1,15 @@
 <?php /** @var Array $data */ ?>
 <!--Hlavny text-->
 <div class="row">
-    <div class="col-sm-2"></div>
+    <div class="col-md-2"></div>
 
 
-    <div class="col-sm-4">
+    <div class="col-md-4">
         <div class="card" style="max-width: 100%">
             <img class="card-img-top img-fluid" src="public/images/profiles/admin_profile.jpg" alt="Profilová fotka" style="float: left">
         </div>
     </div>
-    <div class="col-sm-4">
+    <div class="col-md-4">
         <div class="card-body" style="float: left">
             <h1>Matej Grochal</h1>
             <p class="card-text">Som študentom informatiky na FRI-UNIZA a vo voľnom čase sa venujem vareniu a pečeniu.
@@ -30,6 +30,6 @@
 
 
 
-    <div class="col-sm-2"></div>
+    <div class="col-md-2"></div>
 </div>
 

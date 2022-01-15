@@ -3,21 +3,22 @@
 namespace App\Controllers;
 
 use App\AccountHandler;
+use App\Core\Responses\JsonResponse;
 use App\Core\Responses\Response;
 use App\Deleter;
 use App\FormatChecker;
 use App\Models\country;
-use App\Models\ingredient;
 use App\Models\recipe;
 use App\RecipesHandler;
 use App\SearchManager;
+use Exception;
 
 class recipesController extends \App\Controllers\AControllerRedirect
 {
     /**
      * @inheritDoc
      */
-    public function index()
+    public function index(): \App\Core\Responses\ViewResponse|Response
     {
         return $this->html(
             [ 'nazov' => 'Pizza'
@@ -26,18 +27,24 @@ class recipesController extends \App\Controllers\AControllerRedirect
 
     public function addRecipeForm()
     {
-        if (AccountHandler::getLoggedUser() != null){
-            $ingredientsNames = RecipesHandler::getAllIngredientsNames();
-            $unitShortcuts = RecipesHandler::getAllUnitsShortcuts();
-            $countriesNames = RecipesHandler::getAllCountriesNames();
+        try{
+            if (AccountHandler::getLoggedUser() != null){
+                $ingredientsNames = RecipesHandler::getAllIngredientsNames();
+                $unitShortcuts = RecipesHandler::getAllUnitsShortcuts();
+                $countriesNames = RecipesHandler::getAllCountriesNames();
 
-            return $this->html(
-                [   'ingredientsList' => $ingredientsNames,
-                    'unitsList' => $unitShortcuts,
-                    'countriesList' => $countriesNames]
-            );
-        }else{
-            $this->redirect('fail', 'permissionDenied');
+                return $this->html(
+                    [   'ingredientsList' => $ingredientsNames,
+                        'unitsList' => $unitShortcuts,
+                        'countriesList' => $countriesNames]
+                );
+            }else{
+                $this->redirect('fail', 'index',
+                    ['error' => 'Na túto akciu musíš byť prihlásený :(']);
+            }
+        }catch(Exception){
+            $this->redirect('fail', 'index',
+                ['error' => 'Nastala neočakávaná chyba :(']);
         }
 
     }
@@ -53,7 +60,7 @@ class recipesController extends \App\Controllers\AControllerRedirect
         }
     }
 
-    public function deleteRecipe()
+    public function deleteRecipe(): JsonResponse
     {
         if(Deleter::deleteRecipe(intval($this->request()->getValue('which')))){
             return $this->json('true');
@@ -64,51 +71,71 @@ class recipesController extends \App\Controllers\AControllerRedirect
 
     public function editRecipeForm()
     {
-        $ingredientsNames = RecipesHandler::getAllIngredientsNames();
-        $unitShortcuts = RecipesHandler::getAllUnitsShortcuts();
-        $countriesNames = RecipesHandler::getAllCountriesNames();
+        try{
+            $ingredientsNames = RecipesHandler::getAllIngredientsNames();
+            $unitShortcuts = RecipesHandler::getAllUnitsShortcuts();
+            $countriesNames = RecipesHandler::getAllCountriesNames();
 
-        $recipe = recipe::getOne($this->request()->getValue('id'));
+            $recipe = recipe::getOne($this->request()->getValue('id'));
+            $countryName = country::getOne($recipe->getCountryId());
 
-        return $this->html(
-            ['recipe' => $recipe,
-                'ingredientsList' => $ingredientsNames,
-                'unitsList' => $unitShortcuts,
-                'countriesList' => $countriesNames]);
+            return $this->html(
+                ['recipe' => $recipe,
+                    'ingredientsList' => $ingredientsNames,
+                    'unitsList' => $unitShortcuts,
+                    'countriesList' => $countriesNames,
+                    'country' => $countryName]);
+
+        }catch(Exception){
+            $this->redirect('fail', 'index',
+                ['error' => 'Nastala neočakávaná chyba :(']);
+        }
+
     }
 
-    public function editRecipe()
+    public function editRecipe(): \App\Core\Responses\ViewResponse
     {
         return $this->html();
     }
 
     public function showRecipe()
     {
-        $id = intval($this->request()->getGet()['id']);
-        $recipe = recipe::getOne($id);
-        $country = country::getOne($recipe->getCountryId());
+        try{
+            $id = intval($this->request()->getGet()['id']);
+            $recipe = recipe::getOne($id);
+            $country = country::getOne($recipe->getCountryId());
 
-        return $this->html( [
-            'recipe' => $recipe,
-            'country' => $country,
-            'ingredients_list' => RecipesHandler::getIngredientsListInRecipe($id)
-        ]);
-    }
-
-    public function findRecipe(){
-
-        if (FormatChecker::checkSearchingBarInput($this->request()->getValue('title'))){
-            $recipes = SearchManager::findRecipesByTitle($this->request()->getValue('title'));
-            return $this->html(
-                [ 'recipes' => $recipes,
-                    'countries' => RecipesHandler::getCountriesForRecipesAsMap($recipes) ] );
-        }else{
-            $this->redirect('home', 'index');
+            return $this->html( [
+                'recipe' => $recipe,
+                'country' => $country,
+                'ingredients_list' => RecipesHandler::getIngredientsListInRecipe($id)
+            ]);
+        }catch(Exception){
+            $this->redirect('fail', 'index',
+                ['error' => 'Nastala neočakávaná chyba :(']);
         }
 
     }
 
-    public function changeTitle(): \App\Core\Responses\JsonResponse{
+    public function findRecipe(){
+
+        try{
+            if (FormatChecker::checkSearchingBarInput($this->request()->getValue('title'))){
+                $recipes = SearchManager::findRecipesByTitle($this->request()->getValue('title'));
+                return $this->html(
+                    [ 'recipes' => $recipes,
+                        'countries' => RecipesHandler::getCountriesForRecipesAsMap($recipes) ] );
+            }else{
+                $this->redirect('home', 'index');
+            }
+        }catch(Exception){
+            $this->redirect('fail', 'index',
+                ['error' => 'Nastala neočakávaná chyba :(']);
+        }
+
+    }
+
+    public function changeTitle(): JsonResponse{
         try{
             $newTitle = $this->request()->getValue('title');
             $recipe = recipe::getOne($this->request()->getValue('id'));
@@ -118,13 +145,13 @@ class recipesController extends \App\Controllers\AControllerRedirect
                     return $this->json('true');
                 }
             }
-        }catch(\Exception){
+        }catch(Exception){
         }
 
         return $this->json('false');
     }
 
-    public function changeCountry(): \App\Core\Responses\JsonResponse{
+    public function changeCountry(): JsonResponse{
         try{
             $newCountry = $this->request()->getValue('country');
             $recipe = recipe::getOne($this->request()->getValue('id'));
@@ -134,13 +161,13 @@ class recipesController extends \App\Controllers\AControllerRedirect
                     return $this->json('true');
                 }
             }
-        }catch(\Exception){
+        }catch(Exception){
         }
 
         return $this->json('false');
     }
 
-    public function changeDuration(): \App\Core\Responses\JsonResponse{
+    public function changeDuration(): JsonResponse{
         try{
             $newValue = $this->request()->getValue('value');
             $newUnit = $this->request()->getValue('unit');
@@ -151,13 +178,13 @@ class recipesController extends \App\Controllers\AControllerRedirect
                     return $this->json('true');
                 }
             }
-        }catch(\Exception){
+        }catch(Exception){
         }
 
         return $this->json('false');
     }
 
-    public function changePortions(): \App\Core\Responses\JsonResponse
+    public function changePortions(): JsonResponse
     {
         try{
             $newPortions = $this->request()->getValue('portions');
@@ -168,13 +195,13 @@ class recipesController extends \App\Controllers\AControllerRedirect
                     return $this->json('true');
                 }
             }
-        }catch(\Exception){
+        }catch(Exception){
         }
 
         return $this->json('false');
     }
 
-    public function changeProcess(): \App\Core\Responses\JsonResponse
+    public function changeProcess(): JsonResponse
     {
         try{
             $newProcess = $this->request()->getValue('process');
@@ -185,13 +212,13 @@ class recipesController extends \App\Controllers\AControllerRedirect
                     return $this->json('true');
                 }
             }
-        }catch(\Exception){
+        }catch(Exception){
         }
 
         return $this->json('false');
     }
 
-    public function changeAbout(): \App\Core\Responses\JsonResponse
+    public function changeAbout(): JsonResponse
     {
         try{
             $newAbout = $this->request()->getValue('about');
@@ -202,7 +229,7 @@ class recipesController extends \App\Controllers\AControllerRedirect
                     return $this->json('true');
                 }
             }
-        }catch(\Exception){
+        }catch(Exception){
         }
 
         return $this->json('false');

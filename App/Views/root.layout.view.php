@@ -28,7 +28,7 @@
 <body>
 
 <!--Main navigation bar - menu-->
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+<nav class="navbar navbar-expand-lg bg-dark navbar-dark">
     <div class="container-fluid">
 
         <a class="navbar-brand" href="index.html">
