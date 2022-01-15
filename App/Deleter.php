@@ -84,7 +84,7 @@ class Deleter
     /* Safely delete all associated ingredients with recipe, which ID is input parameter
     *
     */
-    public static function deleteIngredientsAssociatedToRecipe($recipe_id): bool
+    private static function deleteIngredientsAssociatedToRecipe($recipe_id): bool
     {
         try{
             $associations = list_of_ingredients::getAll('recipe_id = ?', [$recipe_id]);

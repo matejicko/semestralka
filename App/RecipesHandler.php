@@ -170,20 +170,9 @@ class RecipesHandler
         }
 
         //recipe image input control
-        try{ //try to find ID for recipe, that will be added
-            $recipes = recipe::getAll();
-            if (isset($recipes)){
-                $recipeId = $recipes[count($recipes) - 1]->getId() + 1;
-            }else{
-                $recipeId = 1;
-            }
-        }catch(Exception){
-            return false;
-        }
-
         if (isset($picture)) {
             if ($picture["error"] == UPLOAD_ERR_OK) {
-                $nameImg =  $title . "_RECIPE_" . $recipeId . "_" . $picture['name'];
+                $nameImg =  $title . "_RECIPE_" . date('Y-m-d-H-i-s_') . "_" . $picture['name'];
                 $via = Configuration::UPLOAD_DIR_RECIPE_PHOTO . "$nameImg";
                 move_uploaded_file($picture['tmp_name'], $via);
 
@@ -245,6 +234,11 @@ class RecipesHandler
         //now when whole input is controlled, we can save recipe and transfer it to the database
         try{
             $recipe->save();
+
+            $recipes = recipe::getAll();
+            if (isset($recipes)){
+                $recipeId = $recipes[count($recipes) - 1]->getId();
+            }
         }catch(Exception){
             return false;
         }
@@ -269,15 +263,7 @@ class RecipesHandler
 
                 }catch(Exception){
                     try{ //try to delete yet saved recipe with all yet saved associations
-                        $recipes = recipe::getAll();
-                        if (isset($recipes)){
-                            $recipeId = $recipes[count($recipes) - 1]->getId();
-                        }
-
-                        Deleter::deleteIngredientsAssociatedToRecipe($recipeId);
-
-                        $recipe->setId($recipeId);
-                        $recipe->delete();
+                        Deleter::deleteRecipe($recipeId);
                     }catch(Exception){
                     }
                     return false;
