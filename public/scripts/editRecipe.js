@@ -1,18 +1,43 @@
-function AJAX(via, notificator){
+function AJAX(via, button, notificationSegment){
     let successColor = '#5cb85c';
     let failColor = '#df4759';
+
+    let strong = document.createElement('strong');
+    let alertDiv = document.createElement('div');
+    alertDiv.role = "alert";
 
     fetch(via)
         .then(response => response.json())
         .then(data => {
             if (data === 'false') {
-                notificator.innerText = "Zmenu sa nepodarilo nahrať...";
-                notificator.style.color = failColor;
+                alertDiv.className = "alert alert-danger d-flex align-items-center fading-item";
+
+                strong.innerText = "Zmenu sa nepodarilo nahrať!";
+                alertDiv.appendChild(strong);
+
+                button.parentNode.insertBefore(alertDiv, button);
+
+                window.setTimeout(function (){
+                    alertDiv.remove();
+                }, 2500);
+
             } else {
-                notificator.innerText = "Zmenu sa podarilo úspešne nahrať :)";
-                notificator.style.color = successColor;
+                alertDiv.className = "alert alert-success d-flex align-items-center fading-item";
+
+                strong.innerText = "Zmenu sa podarilo úspešne nahrať :)";
+                alertDiv.appendChild(strong);
+
+                button.parentNode.insertBefore(alertDiv, button);
+
+                window.setTimeout(function (){
+                    alertDiv.remove();
+                }, 2500);
             }
         });
+}
+
+function insertAfter(newNode, referenceNode) {
+    referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
 
 window.onload = function () {
@@ -22,6 +47,8 @@ window.onload = function () {
     let durationButton = document.getElementById('duration_button');
     let countryButton = document.getElementById('country_button');
     let portionButton = document.getElementById('portion_button');
+    let processButton = document.getElementById('process_button');
+    let aboutButton = document.getElementById('about_button');
 
     titleButton.onclick = function () {
         let title = document.getElementById('title_input').value;
@@ -29,7 +56,7 @@ window.onload = function () {
             let via = "?c=recipes&a=changeTitle&id=" + id +
                 "&title=" + title;
 
-            AJAX(via, document.getElementById('title_help'));
+            AJAX(via, titleButton); //document.getElementById('title_help'));
         }
     }
 
@@ -40,7 +67,7 @@ window.onload = function () {
             let via = "?c=recipes&a=changeCountry&id=" + id +
                 "&country=" + country;
 
-            AJAX(via, document.getElementById('country_help'));
+            AJAX(via, countryButton);
         }
 
     }
@@ -53,7 +80,7 @@ window.onload = function () {
             let via = "?c=recipes&a=changeDuration&id=" + id +
                 "&value=" + durationValue + "&unit=" + durationUnit;
 
-            AJAX(via, document.getElementById('duration_help'));
+            AJAX(via, durationButton);
         }
     }
 
@@ -63,7 +90,27 @@ window.onload = function () {
         if (parseFloat(portion) >= 0){
             let via = "?c=recipes&a=changePortions&id=" + id + "&portions=" + portion;
 
-            AJAX(via, document.getElementById('portion_help'));
+            AJAX(via, portionButton);
+        }
+    }
+
+    processButton.onclick = function () {
+        let process = document.getElementById('process_input').value;
+
+        if (process !== ""){
+            let via = "?c=recipes&a=changeProcess&id=" + id + "&process=" + process;
+
+            AJAX(via, processButton);
+        }
+    }
+
+    aboutButton.onclick = function () {
+        let about = document.getElementById('about_input').value;
+
+        if (about !== ""){
+            let via = "?c=recipes&a=changeAbout&id=" + id + "&about=" + about;
+
+            AJAX(via, aboutButton);
         }
     }
 

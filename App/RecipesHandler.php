@@ -120,12 +120,8 @@ class RecipesHandler
         if (!self::changeTitleToRecipe($recipe, $title, false)){
             return false;
         }
-//        if (!FormatChecker::checkPlainText($title) || strlen($title) > 64){
-//            return false;
-//        }
-//
-//        $recipe->setTitle($title);
 
+        //recipe image input control
         $recipeId = 0;
         try{ //try to find ID for recipe, that will be added
             $recipes = recipe::getAll();
@@ -135,6 +131,7 @@ class RecipesHandler
                 $recipeId = 1;
             }
         }catch(\Exception){
+            return false;
         }
 
         if (isset($picture)) {
@@ -144,61 +141,38 @@ class RecipesHandler
                 move_uploaded_file($picture['tmp_name'], $via);
 
                 $recipe->setImage($via);
+            }else{
+                return false;
             }
+        }else{
+            return false;
         }
 
         //controls if country exists in DB
         if (!self::changeCountryToRecipe($recipe, $country, false)){
             return false;
         }
-//        $countryCheck = country::getAll('name = ?', [$country]);
-//        if (!isset($countryCheck[0])){
-//            return false;
-//        }
-//
-//        $recipe->setCountryId($countryCheck[0]->getId());
 
         //duration format control
         if (!self::changeDurationToRecipe($recipe, $duration_value, $duration_unit, false)){
             return false;
         }
-//        if (FormatChecker::checkNonNullityAndNonEmptiness($duration_value) &&
-//            FormatChecker::checkNonNullityAndNonEmptiness($duration_unit)){
-//
-//            if (floatval($duration_value) > 0){
-//                $duration = $duration_value . " " . $duration_unit;
-//                $recipe->setDuration($duration);
-//            }else{
-//                return false; //duration has to be positive number
-//            }
-//        }
 
         //portions control
         if (!self::changePortionsToRecipe($recipe, $portion, false)){
             return false;
         }
-//        if (FormatChecker::checkNonNullityAndNonEmptiness($portion)){
-//            if (intval($portion) > 0){
-//                $recipe->setPortions(intval($portion));
-//            }else{
-//                return false; //number of portions has to be positive number
-//            }
-//        }
 
         //process field is mandatory
-        if (!FormatChecker::checkPlainText($process)){
+        if (!self::changeProcessToRecipe($recipe, $process, false)){
             return false;
-        }else{
-            $recipe->setProcess($process);
         }
 
-        //about field is not mandatory
+        //about field is optional
         if (FormatChecker::checkNonNullityAndNonEmptiness($about)){
 
             //if there is about section, it has to follow some rules, otherwise recipe won't be added
-            if (FormatChecker::checkPlainText($about)){
-                $recipe->setAbout($about);
-            }else{
+            if (!self::changeAboutToRecipe($recipe, $about, false)){
                 return false;
             }
         }
@@ -218,7 +192,6 @@ class RecipesHandler
 
         //----------------------------------FINALIZATION----------------------------------
         //now when whole input is controlled, we can save recipe and transfer it to the database
-        $recipeId = 0;
         try{
             $recipe->save();
         }catch(\Exception){
@@ -410,6 +383,8 @@ class RecipesHandler
                 return false; //number of portions has to be positive number
             }
         }
+
+        return false;
     }
 
     public static function changeCountryToRecipe(recipe $recipe, mixed $newCountry, bool $sendToDB)
@@ -434,5 +409,45 @@ class RecipesHandler
             return false;
         }
 
+    }
+
+    public static function changeProcessToRecipe(recipe $recipe, mixed $newProcess, bool $sendToDB)
+    {
+        if (!FormatChecker::checkPlainText($newProcess)){
+            return false;
+        }else{
+            $recipe->setProcess($newProcess);
+
+            if ($sendToDB){
+                try{
+                    $recipe->save();
+                }catch(\Exception){
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+    }
+
+    public static function changeAboutToRecipe(recipe $recipe, mixed $newAbout, bool $sendToDB)
+    {
+        if (FormatChecker::checkPlainText($newAbout)){
+            $recipe->setAbout($newAbout);
+
+            if ($sendToDB){
+                try{
+                    $recipe->save();
+                }catch(\Exception){
+                    return false;
+                }
+            }
+
+            return true;
+
+        }else{
+            return false;
+        }
     }
 }

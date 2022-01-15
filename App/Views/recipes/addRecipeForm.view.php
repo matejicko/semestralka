@@ -27,7 +27,7 @@
             <div class="mb-2">
                 <label for="image_input" class="form-label">Náhľad receptu:</label>
                 <input name='photo' type="file" class="form-control" id="image_input"
-                       aria-describedby="photo_help">
+                       aria-describedby="photo_help" required>
                 <div id="photo_help" class="form-text">Maximálna veľkosť súboru je 10MB!</div>
             </div>
 
@@ -45,7 +45,8 @@
             <h4>Atribúty receptu</h4>
             <div class="mb-2">
                 <label for="country_input" class="form-label">Krajina:</label>
-                <select name='country' class="form-select" name="country_input" aria-label="Default select example">
+                <select name='country' class="form-select" name="country_input"
+                        aria-label="Default select example" required>
                     <option value="" disabled>Vyber krajinu</option>
 
                     <?php if (isset($data['countriesList'])){
@@ -62,7 +63,8 @@
             <div class="mb-2">
                 <label for="duration_input" class="form-label">Dĺžka trvania:</label>
                 <input name='duration_value' type="number" step="0.1" class="form-control" id="duration_value_input" >
-                <select name='duration_unit' class="form-select" name="duration_unit_input" aria-label="Default select example">
+                <select name='duration_unit' class="form-select" name="duration_unit_input"
+                        aria-label="Default select example" required>
                     <option value="" disabled>Vyber jednotku:</option>
                     <option value="hodina">hodina</option>
                     <option value="hodín">hodín</option>
@@ -75,7 +77,7 @@
 
             <div class="mb-2">
                 <label for="portion_input" class="form-label">Počet porcii:</label>
-                <input name='portion' type="number" class="form-control" id="portion_input">
+                <input id="portion_input" name='portion' type="number" class="form-control" value="4" required>
             </div>
 
         </div>
@@ -94,11 +96,12 @@
             <div class="row">
                 <div class="col-auto">
                     <label for="ingredient_value_input" class="form-label">Množstvo:</label>
-                    <input name='ingredient_value_1' type="number" step="0.1" class="form-control" id="ingredient_value_input" value="1">
+                    <input id="ingredient_value_input" name='ingredient_value_1' type="number" step="0.1" class="form-control"
+                            value="1" required>
                 </div>
                 <div class="col-auto">
                     <label for="ingredient_unit_input_1" class="form-label">Jednotka:</label>
-                    <select id="ingredient_unit_input_1" name="ingredient_unit_1" class="form-select">
+                    <select id="ingredient_unit_input_1" name="ingredient_unit_1" class="form-select" required>
 
                         <option value="" disabled>Vyber jednotku</option>
 
@@ -117,18 +120,19 @@
                 <div class="col-auto">
                     <label for="ingredient_input" class="form-label">Surovina:</label>
 
-                    <input id='ingredient_input_1' name="ingredient_1" type="text" class="form-control" list="ingredient_list">
-                        <datalist id="ingredients_list">
-                            <?php if (isset($data['ingredientsList'])){
-                                $ingredientsList = $data['ingredientsList'];
-                                for ($i = 1; $i < count($ingredientsList); $i++){ ?>
+                    <input id='ingredient_input_1' name="ingredient_1" type="text" class="form-control"
+                           list="ingredient_list" required>
 
-                                    <option value="<?=$ingredientsList[$i]?>"><?=$ingredientsList[$i]?></option>
+                    <datalist id="ingredients_list">
+                        <?php if (isset($data['ingredientsList'])){
+                            $ingredientsList = $data['ingredientsList'];
+                            for ($i = 1; $i < count($ingredientsList); $i++){ ?>
 
-                                <?php }
-                            }?>
-                        </datalist>
-                    </input>
+                                <option value="<?=$ingredientsList[$i]?>"><?=$ingredientsList[$i]?></option>
+
+                            <?php }
+                        }?>
+                    </datalist>
                 </div>
 
                 <div class="col-auto">

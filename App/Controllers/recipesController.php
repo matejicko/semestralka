@@ -56,9 +56,6 @@ class recipesController extends \App\Controllers\AControllerRedirect
     public function deleteRecipe()
     {
         if(Deleter::deleteRecipe(intval($this->request()->getValue('which')))){
-//            $this->redirect('home', 'index',
-//                [ 'success_message' => 'Recept bol úspešne vymazaný']
-//            );
             return $this->json('true');
         }else{
             return $this->json('false');
@@ -168,6 +165,40 @@ class recipesController extends \App\Controllers\AControllerRedirect
 
             if (isset($recipe)){
                 if (RecipesHandler::changePortionsToRecipe($recipe, $newPortions, true)){
+                    return $this->json('true');
+                }
+            }
+        }catch(\Exception){
+        }
+
+        return $this->json('false');
+    }
+
+    public function changeProcess(): \App\Core\Responses\JsonResponse
+    {
+        try{
+            $newProcess = $this->request()->getValue('process');
+            $recipe = recipe::getOne($this->request()->getValue('id'));
+
+            if (isset($recipe)){
+                if (RecipesHandler::changeProcessToRecipe($recipe, $newProcess, true)){
+                    return $this->json('true');
+                }
+            }
+        }catch(\Exception){
+        }
+
+        return $this->json('false');
+    }
+
+    public function changeAbout(): \App\Core\Responses\JsonResponse
+    {
+        try{
+            $newAbout = $this->request()->getValue('about');
+            $recipe = recipe::getOne($this->request()->getValue('id'));
+
+            if (isset($recipe)){
+                if (RecipesHandler::changeAboutToRecipe($recipe, $newAbout, true)){
                     return $this->json('true');
                 }
             }
