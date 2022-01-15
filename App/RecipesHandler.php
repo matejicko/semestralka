@@ -268,8 +268,16 @@ class RecipesHandler
                     }
 
                 }catch(Exception){
-                    try{
-                        $recipe->delete(); //try to delete yet saved recipe
+                    try{ //try to delete yet saved recipe with all yet saved associations
+                        $recipes = recipe::getAll();
+                        if (isset($recipes)){
+                            $recipeId = $recipes[count($recipes) - 1]->getId();
+                        }
+
+                        Deleter::deleteIngredientsAssociatedToRecipe($recipeId);
+
+                        $recipe->setId($recipeId);
+                        $recipe->delete();
                     }catch(Exception){
                     }
                     return false;
