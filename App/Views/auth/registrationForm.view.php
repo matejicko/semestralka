@@ -66,7 +66,8 @@
                 <div id="password_verify_help" class="form-text">Zadaj prosím svoje heslo ešte raz.</div>
             </div>
 
-            <button id="registrationButton" type="submit" class="btn btn-primary" disabled>Registrácia</button>
+            <button id="fake_button" type="button" class="btn btn-primary" disabled>Registrácia</button>
+            <button id="registration_button" type="submit" class="btn btn-primary" style="visibility: hidden"></button>
         </form>
 
 
