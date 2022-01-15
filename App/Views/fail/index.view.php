@@ -1,6 +1,6 @@
 <?php /** @var Array $data */ ?>
 
-</div>
+<?php if (isset($data['error'])) {?>
 <div class="row">
     <div class="col-sm-2"></div>
 
@@ -12,3 +12,5 @@
 
     <div class="col-sm-2"></div>
 </div>
+
+<?php } ?>

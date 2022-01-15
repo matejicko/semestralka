@@ -18,11 +18,9 @@ class recipesController extends \App\Controllers\AControllerRedirect
     /**
      * @inheritDoc
      */
-    public function index(): \App\Core\Responses\ViewResponse|Response
+    public function index()
     {
-        return $this->html(
-            [ 'nazov' => 'Pizza'
-        ]);
+        $this->redirect('home', 'index');
     }
 
     public function addRecipeForm()
@@ -77,14 +75,20 @@ class recipesController extends \App\Controllers\AControllerRedirect
             $countriesNames = RecipesHandler::getAllCountriesNames();
 
             $recipe = recipe::getOne($this->request()->getValue('id'));
-            $countryName = country::getOne($recipe->getCountryId());
+            if (isset($recipe)){
+                $countryName = country::getOne($recipe->getCountryId());
 
-            return $this->html(
-                ['recipe' => $recipe,
-                    'ingredientsList' => $ingredientsNames,
-                    'unitsList' => $unitShortcuts,
-                    'countriesList' => $countriesNames,
-                    'country' => $countryName]);
+                return $this->html(
+                    ['recipe' => $recipe,
+                        'ingredientsList' => $ingredientsNames,
+                        'unitsList' => $unitShortcuts,
+                        'countriesList' => $countriesNames,
+                        'country' => $countryName]);
+            }else{
+                $this->redirect('fail', 'index',
+                    ['error' => 'Recept s takým ID buď neexistuje, alebo ID parameter chýba v URL adrese!']);
+            }
+
 
         }catch(Exception){
             $this->redirect('fail', 'index',
@@ -93,23 +97,32 @@ class recipesController extends \App\Controllers\AControllerRedirect
 
     }
 
-    public function editRecipe(): \App\Core\Responses\ViewResponse
-    {
-        return $this->html();
-    }
-
     public function showRecipe()
     {
         try{
             $id = intval($this->request()->getGet()['id']);
-            $recipe = recipe::getOne($id);
-            $country = country::getOne($recipe->getCountryId());
 
-            return $this->html( [
-                'recipe' => $recipe,
-                'country' => $country,
-                'ingredients_list' => RecipesHandler::getIngredientsListInRecipe($id)
-            ]);
+            if (isset($id)){
+                $recipe = recipe::getOne($id);
+
+                if (isset($recipe)){
+                    $country = country::getOne($recipe->getCountryId());
+
+                    return $this->html( [
+                        'recipe' => $recipe,
+                        'country' => $country,
+                        'ingredients_list' => RecipesHandler::getIngredientsListInRecipe($id)
+                    ]);
+                }else{
+                    $this->redirect('fail', 'index',
+                        ['error' => 'Recept s daným ID neevidujeme v databáze!']);
+                }
+
+            }else{
+                $this->redirect('fail', 'index',
+                    ['error' => 'Nekompletná adresa (chýba ID parameter)!']);
+            }
+
         }catch(Exception){
             $this->redirect('fail', 'index',
                 ['error' => 'Nastala neočakávaná chyba :(']);

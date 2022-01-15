@@ -16,7 +16,7 @@
 
             <?php if ($data['photo'] != null || $data['photo'] != ''){?>
                 <img id="profilePicture" class="card-img-top img-fluid" src="<?=$data['photo']?>"
-                     alt="Profilová fotka" style="float: top; max-width: 20%"><br>
+                     alt="Profilová fotka" style="max-width: 20%"><br>
                 <hr/>
                 <?php }?>
 
@@ -56,10 +56,10 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="password_input" class="form-label">Tvoje nové heslo:</label>
-                    <input name="new_password" type="password" class="form-control" id="password_input"
-                           aria-describedby="password_help" maxlength="64">
-                    <div id="password_help" class="form-text">V prípade, že chceš zmeniť heslo zadaj ho do poľa nad tebou, v opačnom prípade ti ostane aktuálne heslo.</div>
+                    <label for="new_password_input" class="form-label">Tvoje nové heslo:</label>
+                    <input id="new_password_input" name="new_password" type="password" class="form-control"
+                           aria-describedby="new_password_help" maxlength="64">
+                    <div id="new_password_help" class="form-text">V prípade, že chceš zmeniť heslo zadaj ho do poľa nad tebou, v opačnom prípade ti ostane aktuálne heslo.</div>
                 </div>
 
                 <div class="mb-3">
@@ -71,7 +71,7 @@
 
                 <div class="mb-3">
                     <label for="check_password_input" class="form-label">Zadaj aktuálne heslo:</label>
-                    <input name="password" type="password" class="form-control" id="check_password_input"
+                    <input id="check_password_input" name="password" type="password" class="form-control"
                            aria-describedby="password_help" maxlength="64" required>
                     <div id="password_help" class="form-text">Zadaj aktuálne heslo pre potvrdenie zmien.</div>
                 </div>

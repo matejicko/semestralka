@@ -45,7 +45,7 @@
             <h4>Atribúty receptu</h4>
             <div class="mb-2">
                 <label for="country_input" class="form-label">Krajina:</label>
-                <select name='country' class="form-select" name="country_input"
+                <select id="country_input" name='country' class="form-select"
                         aria-label="Default select example" required>
                     <option value="" disabled>Vyber krajinu</option>
 
@@ -61,9 +61,9 @@
             </div>
 
             <div class="mb-2">
-                <label for="duration_input" class="form-label">Dĺžka trvania:</label>
-                <input name='duration_value' type="number" step="0.1" class="form-control" id="duration_value_input" >
-                <select name='duration_unit' class="form-select" name="duration_unit_input"
+                <label for="duration_value_input" class="form-label">Dĺžka trvania:</label>
+                <input id="duration_value_input" name='duration_value' type="number" step="0.1" class="form-control">
+                <select name='duration_unit' class="form-select"
                         aria-label="Default select example" required>
                     <option value="" disabled>Vyber jednotku:</option>
                     <option value="hodina">hodina</option>
@@ -119,10 +119,10 @@
 
                 </div>
                 <div class="col-auto">
-                    <label for="ingredient_input" class="form-label">Surovina:</label>
+                    <label for="ingredient_input_1" class="form-label">Surovina:</label>
 
                     <input id='ingredient_input_1' name="ingredient_1" type="text" class="form-control"
-                           list="ingredient_list" required>
+                           list="ingredients_list" required>
 
                     <datalist id="ingredients_list">
                         <?php if (isset($data['ingredientsList'])){
@@ -138,7 +138,7 @@
 
                 <div class="col-auto">
                     <label for="add_line_button" class="form-label">Pridať ďalšiu</label><br>
-                    <button id='add_line_button' name="add_line_button" type="button" class="btn" style="float:bottom">+</button>
+                    <button id='add_line_button' name="add_line_button" type="button" class="btn">+</button>
                 </div>
 
             </div>
@@ -156,7 +156,7 @@
 
             <h4>Proces</h4>
             <div class="mb-2">
-                <textarea type="text" class="form-control" name="process" required></textarea>
+                <textarea class="form-control" name="process" required></textarea>
             </div>
         </div>
 
@@ -171,7 +171,7 @@
         <div class="col-sm-8 block">
             <h4>O recepte</h4>
             <div class="mb-2">
-                <textarea type="text" class="form-control" name="about"></textarea>
+                <textarea class="form-control" name="about"></textarea>
             </div>
         </div>
 

@@ -57,7 +57,7 @@
             </div>
 
             <div class="mb-2">
-                <label for="duration_input" class="form-label">Dĺžka trvania:</label>
+                <label for="duration_value_input" class="form-label">Dĺžka trvania:</label>
                 <input id="duration_value_input" name='duration_value' type="number" step="0.1" class="form-control"
                     value="<?=(float) filter_var( $data['recipe']->getDuration(), FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION )?>">
 
@@ -97,7 +97,7 @@
 
             <h4>Proces</h4>
             <div class="mb-2">
-                <textarea id="process_input" type="text" class="form-control" name="process"><?=$data['recipe']->getProcess() ?></textarea>
+                <textarea id="process_input" class="form-control" name="process"><?=$data['recipe']->getProcess() ?></textarea>
                 <button id="process_button" class="btn">Zmeniť</button>
 
             </div>
@@ -114,7 +114,7 @@
         <div class="col-sm-8 block">
             <h4>O recepte</h4>
             <div class="mb-2">
-                <textarea id="about_input" type="text" class="form-control" name="about"><?=$data['recipe']->getAbout()?></textarea>
+                <textarea id="about_input" class="form-control" name="about"><?=$data['recipe']->getAbout()?></textarea>
                 <button id="about_button" class="btn">Zmeniť</button>
             </div>
         </div>

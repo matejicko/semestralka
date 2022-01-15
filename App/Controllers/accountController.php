@@ -4,11 +4,9 @@ namespace App\Controllers;
 
 use App\AccountHandler;
 use App\Authentification;
-use App\Core\Responses\Response;
 use App\Deleter;
-use App\Models\country;
-use App\Models\user;
 use App\RecipesHandler;
+use Exception;
 
 class accountController extends AControllerRedirect
 {
@@ -33,7 +31,7 @@ class accountController extends AControllerRedirect
                 $this->redirect('fail', 'index',
                     ['error' => 'Na túto akciu musíš byť prihlásený!']);
             }
-        }catch(\Exception){
+        }catch(Exception){
             $this->redirect('fail', 'index',
                 ['error' => 'Na túto akciu musíš byť prihlásený!']);
         }
@@ -58,7 +56,7 @@ class accountController extends AControllerRedirect
                 $this->redirect('fail', 'index',
                     ['error' => 'Na túto akciu musíš byť prihlásený!']);
             }
-        }catch(\Exception){
+        }catch(Exception){
             $this->redirect('fail', 'index',
                 ['error' => 'Na túto akciu musíš byť prihlásený!']);
         }
@@ -82,7 +80,7 @@ class accountController extends AControllerRedirect
                 $this->redirect('fail', 'index',
                     ['error' => 'Na túto akciu musíš byť prihlásený!']);
             }
-        }catch(\Exception){
+        }catch(Exception){
             $this->redirect('fail', 'index',
                 ['error' => 'Na túto akciu musíš byť prihlásený!']);
         }
@@ -99,7 +97,7 @@ class accountController extends AControllerRedirect
                 $this->redirect('account', 'settingsForm',
                     [ 'error' => 'Nepodarilo sa nám zmeniť údaje na vašom profile. Pravdepodobne už evidujeme konto s vašou novou prezývkou alebo e-mailom...' ]);
             }
-        }catch(\Exception){
+        }catch(Exception){
             $this->redirect('fail', 'index',
                 ['error' => 'Nastala neočakávaná chyba :(']);
         }
@@ -109,12 +107,21 @@ class accountController extends AControllerRedirect
     public function showMyRecipes(){
         try{
             $user = AccountHandler::getLoggedUser();
-            $recipes = RecipesHandler::getRecipesForUser($user->getId());
-            $countries = RecipesHandler::getCountriesForRecipesAsMap($recipes);
-            return $this->html(
-                [ 'recipes' => $recipes,
-                    'countries' => $countries ]);
-        }catch(\Exception){
+
+            if (isset($user)){
+                $recipes = RecipesHandler::getRecipesForUser($user->getId());
+                $countries = RecipesHandler::getCountriesForRecipesAsMap($recipes);
+
+                return $this->html(
+                    [ 'recipes' => $recipes,
+                        'countries' => $countries ]);
+            }else{
+                $this->redirect('fail', 'index',
+                    ['error' => 'Na túto akciu musíš byť prihlásený!']);
+            }
+
+
+        }catch(Exception){
             $this->redirect('fail', 'index',
                 ['error' => 'Nastala neočakávaná chyba :(']);
         }

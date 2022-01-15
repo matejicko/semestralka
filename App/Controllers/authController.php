@@ -13,9 +13,9 @@ class authController extends AControllerRedirect
     /**
      * @inheritDoc
      */
-    public function index(): ViewResponse|Response
+    public function index()
     {
-        return $this->html();
+        $this->redirect('auth', 'registrationForm');
     }
 
     public function loginForm(): ViewResponse

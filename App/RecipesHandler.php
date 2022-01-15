@@ -143,7 +143,13 @@ class RecipesHandler
                 isset($ingredient[$i]))) {
 
                 break;
+            }else{
+                if (!FormatChecker::checkPlainText($ingredient[$i]) ||
+                    !FormatChecker::checkPlainText($ingredient_unit[$i])){
+                    return false;
+                }
             }
+
 
             $i++;
         }
@@ -353,17 +359,17 @@ class RecipesHandler
                 //in case that no unit is used
                 if ($row->getUnitId() == 1){
                     if ($ingredientQuantity == 0 || $ingredientQuantity == 1){
-                        $output = $output . "&#9-&#9" . $ingredientName ."<br>";
+                        $output = $output . "&#9;-&#9;" . $ingredientName ."<br>";
                     }else{
-                        $output = $output . "&#9-&#9<b>" . $ingredientQuantity .
-                            "</b>&#9" . $ingredientName . "<br>";
+                        $output = $output . "&#9;-&#9;<b>" . $ingredientQuantity .
+                            "</b>&#9;" . $ingredientName . "<br>";
                     }
                 }else{
                     $ingredientUnit = unit::getOne($row->getUnitId());
                     $ingredientUnitName = $ingredientUnit->getShortcut();
 
-                    $output = $output . "&#9-&#9<b>" . $ingredientQuantity . " " .
-                        $ingredientUnitName . "</b>&#9" . $ingredientName ."<br>";
+                    $output = $output . "&#9;-&#9;<b>" . $ingredientQuantity . " " .
+                        $ingredientUnitName . "</b>&#9;" . $ingredientName ."<br>";
                 }
 
             }

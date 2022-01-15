@@ -18,12 +18,22 @@ if (isset($data['recipes']) && count($data['recipes']) > 0 &&
                 <div class="col-sm-6 block">
 
                     <div class="vr"></div>
-                    <img class="img-fluid recipe-img-preview" src="<?= $recipe->getImage() ?>" alt="Náhľad receptu">
+                    <?php if ($recipe->getImage() != null && $recipe->getImage() != ""){
+                        $viaRecipeImage = $recipe->getImage();
+                    }else{
+                        $viaRecipeImage = "#";
+                    } ?>
+
+                    <img class="img-fluid recipe-img-preview" src="<?=$viaRecipeImage?>" alt="Náhľad receptu">
 
                     <div class="card-body" style="float: left">
-                        <img class="vlajka" alt="Vlajka (<?= $countries[$c_id]->getName() ?>)"
-                             src="<?= $countries[$c_id]->getFlag() ?>">
 
+                        <?php if ($countries[$c_id]->getFlag() != null && $countries[$c_id]->getFlag() != ""){ ?>
+                            <img class="vlajka" alt="Vlajka (<?= $countries[$c_id]->getName() ?>)"
+                             src="<?= $countries[$c_id]->getFlag() ?>">
+                        <?php }else{ ?>
+                            Vlajka (<?= $countries[$c_id]->getName() ?>)
+                        <?php } ?>
                         <div>
                             <h2><?= $recipe->getTitle() ?></h2>
                             <span class="badge bg-dark"><?= $countries[$c_id]->getName() ?></span>
